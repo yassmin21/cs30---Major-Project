@@ -1,2 +1,2 @@
-# cs30---Major-Project
+# cs30-Major-Project
 CS30 Major Project
