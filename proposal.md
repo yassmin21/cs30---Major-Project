@@ -1,12 +1,21 @@
 # Major Project Proposal
 
 ## Description
-What am I going to build?
+Snakes and Ladders
 
 ## Needs to have list
-- thing 1
-- thing 2
+- a grid
+- snakes
+- ladders
+- a randomized number dice thing
+- start screen
+- win screen
+- how to play
+- different characters
 
 ## Nice to have list
-- other thing
-- yet another thing
+- different modes
+- an actual dice with like animation
+- music
+- sound affects
+- multiplayer
