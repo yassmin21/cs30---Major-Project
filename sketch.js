@@ -1,6 +1,6 @@
-// Project Title
-// Your Name
-// Date
+// Snakes and Ladders
+// Yassmin Ibrahim
+// 5 / 3/ 2024
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
@@ -13,5 +13,5 @@ function setup() {
 function draw() {
   background(220);
 
-  square(mouseX, mouseY, 100);
+  
 }
