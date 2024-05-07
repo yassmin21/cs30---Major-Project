@@ -26,10 +26,10 @@ A multiplier game with snakes and ladders, where you are trying to get to the en
 A dinosaur game where you are avoiding obstacles as you collect points with the amount of time the game runs and you dont hit an obstacles so you don't die.
 
 ## Needs to have list
-- A randomized terrain
 - A dinosaur that can jump with space
 - Obstacles such as cactai
 - Different sized obstacles 
+- A background 
 - A score in the corner
 - Track high score 
 - Start screen
@@ -39,6 +39,7 @@ A dinosaur game where you are avoiding obstacles as you collect points with the 
 
 ## Nice to have list
 - Different background colours
+- The background moves
 - you can crouch the dinosaur and add bird obstacle
 - As time goes own the game gets faster
 - Music
