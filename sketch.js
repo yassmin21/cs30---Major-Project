@@ -21,6 +21,7 @@ function setup(){
 function draw(){
   background("grey");
   character();
+  // keyPressed();
 }
 
 function character(){
@@ -35,8 +36,14 @@ function character(){
 
   if(mouseIsPressed){
     velocity -= gravity * 3; 
+    
   }
-
+  
   rect(x, y, 50, 50);
 }
 
+// function keyPressed() {
+//   if (keyCode === UP_ARROW) {
+    
+//   }
+// }
