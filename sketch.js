@@ -14,6 +14,8 @@ class Dinosour{
     this.y;
     this.w;
     this.h;
+    this.gravity;
+    this.velocity;
 
   }
 
@@ -25,7 +27,7 @@ class Dinosour{
 
   }
 
-  
+
 }
 let x = 30;
 let y = 175;
