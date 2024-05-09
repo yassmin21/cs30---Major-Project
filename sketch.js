@@ -8,6 +8,13 @@
 
 //make a object for character
 
+class Dinosour{
+  constructor(){
+    this.x;
+    this.y;
+    
+  }
+}
 let x = 30;
 let y = 175;
 
