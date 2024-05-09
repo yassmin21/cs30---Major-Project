@@ -12,8 +12,20 @@ class Dinosour{
   constructor(){
     this.x;
     this.y;
-    
+    this.w;
+    this.h;
+
   }
+
+  jump(){
+
+  }
+
+  display(){
+
+  }
+
+  
 }
 let x = 30;
 let y = 175;
