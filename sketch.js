@@ -9,6 +9,8 @@
 //make a object for character
 
 let Cactai = [];
+let milliSecond;
+let startTime;
 
 class Dinosour{
   constructor(x, y){
@@ -25,7 +27,6 @@ class Dinosour{
     this.velocity += this.gravity;
     this.y += this.velocity;
     if(this.y > height - 70){
-      //doesnt let the bird go down the screen 
       this.y = height - 70;
       this.velocity = 0;
     }
@@ -47,8 +48,8 @@ class Dinosour{
 
 class Cactus{
   constructor(x, y){
-    this.x = width/2;
-    this.y = 175,
+    this.x = width;
+    this.y = 179,
     this.w = 50;
     this.speed = 3;
 
@@ -56,10 +57,7 @@ class Cactus{
 
   move(){
     this.x -= this.speed;
-    if(frameCount % 110 === 0){
-      let cactais = new Cactus(0, this.y);
-      Cactai.push(cactais);
-    }
+    
     
   }
 
@@ -75,22 +73,39 @@ let cactais;
 function setup(){
   createCanvas(600, 250);
   dino = new Dinosour(this.x, this.y);
-  // cactais = new Cactus(0, this.y);
   
 }
 
 function draw(){
   background("grey");
+  time();
   dino.display();
   dino.jump();
+
+  if(frameCount % 110 === 0){
+    let cactais = new Cactus(this.x, this.y);
+    Cactai.push(cactais);
+  }
 
   for(let theCactai of Cactai){
     theCactai.move();
     theCactai.display();
-    
   }
 }
 
 
+function collision(){
+  
+}
 
+function time(){
+  milliSecond = int(millis()/100);
+  if(mouseIsPressed){
+    startTime = int(millis()/100);
+  }
+  if (milliSecond > 0){
+    milliSecond = milliSecond - startTime; //minus the millis from total from millis of start screen
+  }
+  text(milliSecond, width/2, height/2);
+}
 
