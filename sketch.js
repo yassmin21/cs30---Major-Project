@@ -8,63 +8,89 @@
 
 //make a object for character
 
+let Cactai = [];
+
 class Dinosour{
-  constructor(){
-    this.x;
-    this.y;
-    this.w;
-    this.h;
-    this.gravity;
-    this.velocity;
+  constructor(x, y){
+    this.x = 30;
+    this.y = 175;
+    this.w = 50;
+    this.h = this.w;
+    this.gravity = 0.3;
+    this.velocity = 0;
 
   }
 
   jump(){
-
+    this.velocity += this.gravity;
+    this.y += this.velocity;
+    if(this.y > height - 70){
+      //doesnt let the bird go down the screen 
+      this.y = height - 70;
+      this.velocity = 0;
+    }
+    else if(this.y < 60){
+      this.velocity = 0;
+    }
+    if(keyIsPressed){
+      this.velocity -= this.gravity * 3; 
+    }
+      
   }
 
   display(){
-
+    rect(this.x, this.y, this.w, this.w);
   }
 
 
 }
-let x = 30;
-let y = 175;
 
-let gravity = 0.3;
-let velocity = 0;
+class Cactus{
+  constructor(x, y){
+    this.x = width/2;
+    this.y = 175,
+    this.w = 50;
+    this.speed = 3;
+
+  }
+
+  move(){
+    this.x -= this.speed;
+    if(frameCount % 110 === 0){
+      let cactais = new Cactus(0, this.y);
+      Cactai.push(cactais);
+    }
+    
+  }
+
+  display(){
+    rect(this.x, this.y, this.w, this.w);
+  }
+}
+
+let dino;
+let cactais;
+
 
 function setup(){
   createCanvas(600, 250);
+  dino = new Dinosour(this.x, this.y);
+  // cactais = new Cactus(0, this.y);
+  
 }
 
 function draw(){
   background("grey");
-  character();
-  // keyPressed();
-}
+  dino.display();
+  dino.jump();
 
-function character(){
-  velocity += gravity;
-  y += velocity;
-
-  if(y > height - 70){
-    //doesnt let the bird go down the screen 
-    y = height - 70;
-    velocity = 0;
-  }
-
-  if(mouseIsPressed){
-    velocity -= gravity * 3; 
+  for(let theCactai of Cactai){
+    theCactai.move();
+    theCactai.display();
     
   }
-  
-  rect(x, y, 50, 50);
 }
 
-// function keyPressed() {
-//   if (keyCode === UP_ARROW) {
-    
-//   }
-// }
+
+
+
