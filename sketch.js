@@ -18,14 +18,13 @@ class Dinosour{
     this.y = 175;
     this.w = 50;
     this.h = this.w;
-    this.gravity = 0.3;
+    this.gravity = 2;
     this.velocity = 0;
 
   }
 
   jump(){
-    this.velocity += this.gravity;
-    this.y += this.velocity;
+    this.velocity = -25;
     if(this.y > height - 70){
       this.y = height - 70;
       this.velocity = 0;
@@ -33,10 +32,19 @@ class Dinosour{
     else if(this.y < 60){
       this.velocity = 0;
     }
-    if(keyIsPressed){
-      this.velocity -= this.gravity * 3; 
-    }
       
+  }
+
+  run(){
+    this.y += this.velocity;
+    this.velocity += this.gravity;
+    if(this.y > height - 70){
+      this.y = height - 70;
+      this.velocity = 0;
+    }
+    else if(this.y < 60){
+      this.velocity = 0;
+    }
   }
 
   display(){
@@ -80,7 +88,10 @@ function draw(){
   background("grey");
   time();
   dino.display();
-  dino.jump();
+  dino.run();
+  if(keyIsPressed){
+    dino.jump();
+  }
 
   if(frameCount % 110 === 0){
     let cactais = new Cactus(this.x, this.y);
@@ -109,3 +120,6 @@ function time(){
   text(milliSecond, width/2, height/2);
 }
 
+function keyPressed(){
+  
+}
