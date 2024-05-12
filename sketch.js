@@ -3,10 +3,15 @@
 // 5 / 3/ 2024
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - constrain
 
 
 //make a object for character
+
+function preload(){
+  dino1 = loadImage("dino1.png");
+  grassBackground = loadImage("Untitled design.png");
+}
 
 let Cactai = [];
 let milliSecond;
@@ -15,40 +20,32 @@ let startTime;
 class Dinosour{
   constructor(x, y){
     this.x = 30;
-    this.y = 175;
+    this.y = height - 70;
     this.w = 50;
     this.h = this.w;
-    this.gravity = 2;
+    this.gravity = 1;
     this.velocity = 0;
 
   }
 
   jump(){
-    this.velocity = -25;
-    if(this.y > height - 70){
-      this.y = height - 70;
-      this.velocity = 0;
+    if(this.y === height - 70){
+      this.velocity = -15;
     }
-    else if(this.y < 60){
-      this.velocity = 0;
-    }
+    
+    
       
   }
 
   run(){
     this.y += this.velocity;
     this.velocity += this.gravity;
-    if(this.y > height - 70){
-      this.y = height - 70;
-      this.velocity = 0;
-    }
-    else if(this.y < 60){
-      this.velocity = 0;
-    }
+    this.y = constrain(this.y, 60, height - 70);
   }
 
   display(){
-    rect(this.x, this.y, this.w, this.w);
+    // rect(this.x, this.y, this.w, this.w);
+    image(dino1, this.x, this.y, this.w, this.w);
   }
 
 
@@ -70,7 +67,7 @@ class Cactus{
   }
 
   display(){
-    rect(this.x, this.y, this.w, this.w);
+    rect(this.x, this.y, 10, this.w);
   }
 }
 
@@ -85,13 +82,15 @@ function setup(){
 }
 
 function draw(){
-  background("grey");
+  background(grassBackground);
   time();
-  dino.display();
+  //  if(keyIsPressed){
+  //   dino.jump();
+  // }
   dino.run();
-  if(keyIsPressed){
-    dino.jump();
-  }
+  dino.display();
+  
+ 
 
   if(frameCount % 110 === 0){
     let cactais = new Cactus(this.x, this.y);
@@ -104,6 +103,11 @@ function draw(){
   }
 }
 
+function keyPressed(){
+  if(key === ' '){
+    dino.jump();
+  }
+}
 
 function collision(){
   
@@ -120,6 +124,3 @@ function time(){
   text(milliSecond, width/2, height/2);
 }
 
-function keyPressed(){
-  
-}
