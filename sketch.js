@@ -6,11 +6,23 @@
 // - constrain
 
 
-//make a object for character
+//make it run
+// randomize between cactai
+
+let dino1;
+let grassBackground;
+let cactusPicture;
+
+
+let state = "running";
+//state jumping
+//state dead
+
 
 function preload(){
-  dino1 = loadImage("dino1.png");
+  dino1 = loadImage("running dino.png");
   grassBackground = loadImage("Untitled design.png");
+  cactusPicture = loadImage("cactus.png");
 }
 
 let Cactai = [];
@@ -45,6 +57,7 @@ class Dinosour{
 
   display(){
     // rect(this.x, this.y, this.w, this.w);
+    
     image(dino1, this.x, this.y, this.w, this.w);
   }
 
@@ -67,7 +80,9 @@ class Cactus{
   }
 
   display(){
-    rect(this.x, this.y, 10, this.w);
+    // rect(this.x, this.y, 10, this.w);
+    
+    image(cactusPicture, this.x, this.y, 30, this.w);
   }
 }
 
@@ -87,8 +102,7 @@ function draw(){
   //  if(keyIsPressed){
   //   dino.jump();
   // }
-  dino.run();
-  dino.display();
+  
   
  
 
@@ -100,11 +114,14 @@ function draw(){
   for(let theCactai of Cactai){
     theCactai.move();
     theCactai.display();
+    
   }
+  dino.run();
+  dino.display();
 }
 
 function keyPressed(){
-  if(key === ' '){
+  if(key === " "){
     dino.jump();
   }
 }
