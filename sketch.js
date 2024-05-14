@@ -9,18 +9,23 @@
 //make it run
 // randomize between cactai
 
-let dino1;
+let dinoleft;
+let dinoRight;
+let dinoJump;
 let grassBackground;
 let cactusPicture;
+let lastTimeSwitched = 0;
+let duration = 1000;
 
-
-let state = "running";
+let state = "isLeftFoot";
 //state jumping
 //state dead
-
+//92 97
 
 function preload(){
-  dino1 = loadImage("running dino.png");
+  dinoleft = loadImage("running dino.png");
+  dinoRight = loadImage("runing dino right.png");
+  dinoJump = loadImage("running dino jump.png");
   grassBackground = loadImage("Untitled design.png");
   cactusPicture = loadImage("cactus.png");
 }
@@ -57,8 +62,28 @@ class Dinosour{
 
   display(){
     // rect(this.x, this.y, this.w, this.w);
+    if(state === "isLeftFoot"){
+      image(dinoleft, this.x, this.y, this.w, this.w);
+    }
+    else if(state === "isRightFoot"){
+      image(dinoRight, this.x, this.y, this.w, this.w);
+    }
+    else if(state === "isDinoJump"){
+      image(dinoJump, this.x, this.y, this.w, this.w);
+    }
     
-    image(dino1, this.x, this.y, this.w, this.w);
+  }
+
+  switchBetweenDinos(){
+    if(state === "isLeftFoot" && millis()> lastTimeSwitched + duration){
+      state = "isRightFoot";
+      lastTimeSwitched = millis();
+    }
+    else if(state === "isRightFoot" && millis()> lastTimeSwitched + duration){
+      state = "isLeftFoot";
+      lastTimeSwitched = millis();
+    }
+    
   }
 
 
@@ -94,6 +119,7 @@ function setup(){
   createCanvas(600, 250);
   dino = new Dinosour(this.x, this.y);
   
+  
 }
 
 function draw(){
@@ -116,6 +142,7 @@ function draw(){
     theCactai.display();
     
   }
+  dino.switchBetweenDinos();
   dino.run();
   dino.display();
 }
@@ -123,6 +150,7 @@ function draw(){
 function keyPressed(){
   if(key === " "){
     dino.jump();
+    state === "isDinoJump";
   }
 }
 
