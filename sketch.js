@@ -6,8 +6,9 @@
 // - constrain
 
 
-//make it run
+// fix running pic using pixels
 // randomize between cactai
+// make it die if we hit cactus
 
 let dinoleft;
 let dinoRight;
@@ -15,7 +16,7 @@ let dinoJump;
 let grassBackground;
 let cactusPicture;
 let lastTimeSwitched = 0;
-let duration = 1000;
+let duration = 70;
 
 let state = "isLeftFoot";
 //state jumping
@@ -26,7 +27,7 @@ function preload(){
   dinoleft = loadImage("running dino.png");
   dinoRight = loadImage("runing dino right.png");
   dinoJump = loadImage("running dino jump.png");
-  grassBackground = loadImage("Untitled design.png");
+  grassBackground = loadImage("background.png");
   cactusPicture = loadImage("cactus.png");
 }
 
@@ -49,8 +50,6 @@ class Dinosour{
     if(this.y === height - 70){
       this.velocity = -15;
     }
-    
-    
       
   }
 
@@ -83,7 +82,10 @@ class Dinosour{
       state = "isLeftFoot";
       lastTimeSwitched = millis();
     }
-    
+    else if(state === "isDinoJump" && millis() > lastTimeSwitched + 1000){
+      state = "isLeftFoot";
+      lastTimeSwitched = millis();
+    }
   }
 
 
@@ -125,11 +127,6 @@ function setup(){
 function draw(){
   background(grassBackground);
   time();
-  //  if(keyIsPressed){
-  //   dino.jump();
-  // }
-  
-  
  
 
   if(frameCount % 110 === 0){
@@ -150,7 +147,8 @@ function draw(){
 function keyPressed(){
   if(key === " "){
     dino.jump();
-    state === "isDinoJump";
+    state = "isDinoJump";
+    lastTimeSwitched = millis();
   }
 }
 
