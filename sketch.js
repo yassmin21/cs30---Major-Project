@@ -24,7 +24,7 @@ let state = "isLeftFoot";
 //92 97
 
 function preload(){
-  dinoleft = loadImage("running dino.png");
+  dinoleft = loadImage("running dino left.png");
   dinoRight = loadImage("runing dino right.png");
   dinoJump = loadImage("running dino jump.png");
   grassBackground = loadImage("background.png");
@@ -38,8 +38,8 @@ let startTime;
 class Dinosour{
   constructor(x, y){
     this.x = 30;
-    this.y = height - 70;
-    this.w = 50;
+    this.y = height - height/3.7;
+    this.w = height/7;
     this.h = this.w;
     this.gravity = 1;
     this.velocity = 0;
@@ -47,7 +47,7 @@ class Dinosour{
   }
 
   jump(){
-    if(this.y === height - 70){
+    if(this.y === height - height/3.7){
       this.velocity = -15;
     }
       
@@ -56,7 +56,7 @@ class Dinosour{
   run(){
     this.y += this.velocity;
     this.velocity += this.gravity;
-    this.y = constrain(this.y, 60, height - 70);
+    this.y = constrain(this.y, height/2, height - height/3.7);
   }
 
   display(){
@@ -82,7 +82,7 @@ class Dinosour{
       state = "isLeftFoot";
       lastTimeSwitched = millis();
     }
-    else if(state === "isDinoJump" && millis() > lastTimeSwitched + 1000){
+    else if(state === "isDinoJump" && millis() > lastTimeSwitched + 600){
       state = "isLeftFoot";
       lastTimeSwitched = millis();
     }
@@ -94,8 +94,12 @@ class Dinosour{
 class Cactus{
   constructor(x, y){
     this.x = width;
-    this.y = 179,
-    this.w = 50;
+    this.y = height - height/6 - height/8.5,
+    //178
+    this.h = height/6;
+    //50
+    this.w = width/ 20;
+    //30
     this.speed = 3;
 
   }
@@ -109,19 +113,26 @@ class Cactus{
   display(){
     // rect(this.x, this.y, 10, this.w);
     
-    image(cactusPicture, this.x, this.y, 30, this.w);
+    image(cactusPicture, this.x, this.y, this.w, this.h);
   }
 }
 
 let dino;
 let cactais;
 
-
+//600, 250
 function setup(){
-  createCanvas(600, 250);
+  createCanvas(windowWidth, windowHeight);
   dino = new Dinosour(this.x, this.y);
   
   
+}
+function windowResized() {
+  //make the canvas the largest square that you can
+  resizeCanvas(windowWidth, windowHeight);
+  
+
+
 }
 
 function draw(){
@@ -129,7 +140,7 @@ function draw(){
   time();
  
 
-  if(frameCount % 110 === 0){
+  if(frameCount % 200 === 0){
     let cactais = new Cactus(this.x, this.y);
     Cactai.push(cactais);
   }
