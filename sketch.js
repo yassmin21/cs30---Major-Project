@@ -99,6 +99,9 @@ class Dinosour{
     }
   }
 
+  collision(Cactai){
+    let hit = collideRectRect(this.x, this.y, this.w, this.h,  );
+  }
 
 }
 
@@ -111,7 +114,7 @@ class Cactus{
     //50
     this.w = width/ 20;
     //30
-    this.speed = 5;
+    this.speed = 10;
     this.a = cactusPicture;
     this.b = twoCactus;
     this.c = moreCactus;
@@ -184,6 +187,7 @@ function draw(){
   dino.switchBetweenDinos();
   dino.run();
   dino.display();
+  dino.collision();
 }
 
 function keyPressed(){
@@ -194,9 +198,12 @@ function keyPressed(){
   }
 }
 
-function collision(){
-  
-}
+// function collision(){
+//   hit = collideRectRect(this.x, this.y, this.w, this.h, this.x, this.y, this.w, this.w );
+//   if(hit){
+//     background("black");
+//   }
+// }
 
 function time(){
   milliSecond = int(millis()/100);
