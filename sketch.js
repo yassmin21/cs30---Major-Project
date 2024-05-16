@@ -15,6 +15,15 @@ let dinoRight;
 let dinoJump;
 let grassBackground;
 let cactusPicture;
+let twoCactus;
+let moreCactus;
+
+let imageOfCactai;
+let a;
+let b;
+let c;
+let choices;
+
 let lastTimeSwitched = 0;
 let duration = 70;
 
@@ -29,6 +38,8 @@ function preload(){
   dinoJump = loadImage("running dino jump.png");
   grassBackground = loadImage("background.png");
   cactusPicture = loadImage("cactus.png");
+  twoCactus = loadImage("two cactai.png");
+  moreCactus = loadImage("a lot of cactai.png");
 }
 
 let Cactai = [];
@@ -37,18 +48,18 @@ let startTime;
 
 class Dinosour{
   constructor(x, y){
-    this.x = 30;
-    this.y = height - height/3.7;
+    this.x = 60;
+    this.y = height - height/3.8;
     this.w = height/7;
     this.h = this.w;
-    this.gravity = 1;
+    this.gravity = 2.8;
     this.velocity = 0;
 
   }
 
   jump(){
-    if(this.y === height - height/3.7){
-      this.velocity = -15;
+    if(this.y === height - height/3.8){
+      this.velocity = -45;
     }
       
   }
@@ -56,7 +67,7 @@ class Dinosour{
   run(){
     this.y += this.velocity;
     this.velocity += this.gravity;
-    this.y = constrain(this.y, height/2, height - height/3.7);
+    this.y = constrain(this.y, height/20, height - height/3.8);
   }
 
   display(){
@@ -92,7 +103,7 @@ class Dinosour{
 }
 
 class Cactus{
-  constructor(x, y){
+  constructor(x, y, imageOfCactai){
     this.x = width;
     this.y = height - height/6 - height/8.5,
     //178
@@ -100,7 +111,11 @@ class Cactus{
     //50
     this.w = width/ 20;
     //30
-    this.speed = 3;
+    this.speed = 5;
+    this.a = cactusPicture;
+    this.b = twoCactus;
+    this.c = moreCactus;
+    this.imageOfCactai = random([this.a, this.b, this.c]);
 
   }
 
@@ -112,9 +127,22 @@ class Cactus{
 
   display(){
     // rect(this.x, this.y, 10, this.w);
+    if(this.imageOfCactai === this.a){
+      this.w = width/20;
+    }
+    else if(this.imageOfCactai === this.b){
+      this.w = width/10;
+      this.h = height/6  + 8;
+    }
+    else if(this.imageOfCactai === this.c){
+      this.w = width/8;
+    }
     
-    image(cactusPicture, this.x, this.y, this.w, this.h);
+    image(this.imageOfCactai, this.x, this.y, this.w, this.h);
+    // image(cactusPicture, this.x, this.y, this.w, this.h);
   }
+
+  
 }
 
 let dino;
@@ -129,7 +157,9 @@ function setup(){
 }
 function windowResized() {
   //make the canvas the largest square that you can
-  resizeCanvas(windowWidth, windowHeight);
+  if (mouseIsPressed){
+    resizeCanvas(windowWidth, windowHeight);
+  }
   
 
 
@@ -141,9 +171,10 @@ function draw(){
  
 
   if(frameCount % 200 === 0){
-    let cactais = new Cactus(this.x, this.y);
+    let cactais = new Cactus(this.x, this.y, this.imageOfCactai);
     Cactai.push(cactais);
   }
+  
 
   for(let theCactai of Cactai){
     theCactai.move();
