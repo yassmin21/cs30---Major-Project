@@ -93,18 +93,24 @@ class Dinosour{
       state = "isLeftFoot";
       lastTimeSwitched = millis();
     }
-    else if(state === "isDinoJump" && millis() > lastTimeSwitched + 600){
+    else if(state === "isDinoJump" && millis() > lastTimeSwitched + 700){
       state = "isLeftFoot";
       lastTimeSwitched = millis();
     }
   }
-
-  collision(Cactai){
-    let hit = collideRectRect(this.x, this.y, this.w, this.h,  );
+  
+  collision(Cactus){
+    
+     hit = collideRectRect(this.x, this.y, this.w, this.h, Cactus.x, Cactus.y, Cactus.w, Cactus.h);
+    
+    
+    if(hit){
+      background("black");
+    }
   }
 
 }
-
+let hit;
 class Cactus{
   constructor(x, y, imageOfCactai){
     this.x = width;
@@ -114,7 +120,7 @@ class Cactus{
     //50
     this.w = width/ 20;
     //30
-    this.speed = 10;
+    this.speed = 11;
     this.a = cactusPicture;
     this.b = twoCactus;
     this.c = moreCactus;
@@ -145,6 +151,9 @@ class Cactus{
     // image(cactusPicture, this.x, this.y, this.w, this.h);
   }
 
+  disapeared(){
+    this.x > 0;
+  }
   
 }
 
@@ -168,26 +177,35 @@ function windowResized() {
 
 }
 
+
+
 function draw(){
   background(grassBackground);
-  time();
- 
-
-  if(frameCount % 200 === 0){
-    let cactais = new Cactus(this.x, this.y, this.imageOfCactai);
+  // time();
+  //200
+  // let distance = random(110, 200);
+  if(frameCount % 150 === 0){
+    cactais = new Cactus(this.x, this.y, this.imageOfCactai);
     Cactai.push(cactais);
   }
   
 
   for(let theCactai of Cactai){
-    theCactai.move();
-    theCactai.display();
     
+    if(theCactai.disapeared()){
+      let index = Cactai.indexOf(theCactai);
+      Cactai.splice(index, 1);
+    }
+    else{
+      theCactai.move();
+      theCactai.display();
+      dino.collision(theCactai);
+    }
   }
   dino.switchBetweenDinos();
   dino.run();
   dino.display();
-  dino.collision();
+  
 }
 
 function keyPressed(){
@@ -198,21 +216,15 @@ function keyPressed(){
   }
 }
 
-// function collision(){
-//   hit = collideRectRect(this.x, this.y, this.w, this.h, this.x, this.y, this.w, this.w );
-//   if(hit){
-//     background("black");
-//   }
-// }
 
-function time(){
-  milliSecond = int(millis()/100);
-  if(mouseIsPressed){
-    startTime = int(millis()/100);
-  }
-  if (milliSecond > 0){
-    milliSecond = milliSecond - startTime; //minus the millis from total from millis of start screen
-  }
-  text(milliSecond, width/2, height/2);
-}
+// function time(){
+//   milliSecond = int(millis()/100);
+//   if(mouseIsPressed){
+//     startTime = int(millis()/100);
+//   }
+//   if (milliSecond > 0){
+//     milliSecond = milliSecond - startTime; //minus the millis from total from millis of start screen
+//   }
+//   text(milliSecond, width/2, height/2);
+// }
 
