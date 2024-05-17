@@ -27,7 +27,8 @@ let choices;
 let lastTimeSwitched = 0;
 let duration = 70;
 
-let state = "isLeftFoot";
+let state1 = "startScreen";
+let state2 = "isLeftFoot";
 //state jumping
 //state dead
 //92 97
@@ -49,7 +50,7 @@ let startTime;
 class Dinosour{
   constructor(x, y){
     this.x = 60;
-    this.y = height - height/3.8;
+    this.y = height - height/4.5;
     this.w = height/7;
     this.h = this.w;
     this.gravity = 2.8;
@@ -58,7 +59,7 @@ class Dinosour{
   }
 
   jump(){
-    if(this.y === height - height/3.8){
+    if(this.y === height - height/4.5){
       this.velocity = -45;
     }
       
@@ -67,41 +68,50 @@ class Dinosour{
   run(){
     this.y += this.velocity;
     this.velocity += this.gravity;
-    this.y = constrain(this.y, height/20, height - height/3.8);
+    this.y = constrain(this.y, height/20, height - height/4.5);
   }
 
   display(){
     // rect(this.x, this.y, this.w, this.w);
-    if(state === "isLeftFoot"){
-      image(dinoleft, this.x, this.y, this.w, this.w);
-    }
-    else if(state === "isRightFoot"){
-      image(dinoRight, this.x, this.y, this.w, this.w);
-    }
-    else if(state === "isDinoJump"){
+    
+    if(state1 === "startScreen"){
       image(dinoJump, this.x, this.y, this.w, this.w);
     }
-    
+    else if(state1 === "playing"){
+      if(state2 === "isLeftFoot"){
+        image(dinoleft, this.x, this.y, this.w, this.w);
+      }
+      else if(state2 === "isRightFoot"){
+        image(dinoRight, this.x, this.y, this.w, this.w);
+      }
+      else if(state2 === "isDinoJump"){
+        image(dinoJump, this.x, this.y, this.w, this.w);
+      }
+    }
   }
 
   switchBetweenDinos(){
-    if(state === "isLeftFoot" && millis()> lastTimeSwitched + duration){
-      state = "isRightFoot";
+    
+    if(state2 === "isLeftFoot" && millis()> lastTimeSwitched + duration){
+      state2 = "isRightFoot";
       lastTimeSwitched = millis();
     }
-    else if(state === "isRightFoot" && millis()> lastTimeSwitched + duration){
-      state = "isLeftFoot";
+    else if(state2 === "isRightFoot" && millis()> lastTimeSwitched + duration){
+      state2 = "isLeftFoot";
       lastTimeSwitched = millis();
     }
-    else if(state === "isDinoJump" && millis() > lastTimeSwitched + 700){
-      state = "isLeftFoot";
+    else if(state2 === "isDinoJump" && millis() > lastTimeSwitched + 700){
+      state2 = "isLeftFoot";
       lastTimeSwitched = millis();
     }
+    
+    
+    
   }
   
   collision(Cactus){
     
-     hit = collideRectRect(this.x, this.y, this.w, this.h, Cactus.x, Cactus.y, Cactus.w, Cactus.h);
+    hit = collideRectRect(this.x, this.y, this.w, this.h, Cactus.x, Cactus.y, Cactus.w, Cactus.h);
     
     
     if(hit){
@@ -114,7 +124,7 @@ let hit;
 class Cactus{
   constructor(x, y, imageOfCactai){
     this.x = width;
-    this.y = height - height/6 - height/8.5,
+    this.y = height - height/6 - height/10.5,
     //178
     this.h = height/6;
     //50
@@ -180,51 +190,66 @@ function windowResized() {
 
 
 function draw(){
-  background(grassBackground);
-  // time();
-  //200
-  // let distance = random(110, 200);
-  if(frameCount % 150 === 0){
-    cactais = new Cactus(this.x, this.y, this.imageOfCactai);
-    Cactai.push(cactais);
+  if(state1 === "startScreen"){
+    startScreen();
+
   }
+  else if(state1 === "playing"){
+    background(grassBackground);
+    time();
+    //200
+    // let distance = random(110, 200);
+    if(frameCount % 150 === 0){
+      cactais = new Cactus(this.x, this.y, this.imageOfCactai);
+      Cactai.push(cactais);
+    }
   
 
-  for(let theCactai of Cactai){
+    for(let theCactai of Cactai){
     
-    if(theCactai.disapeared()){
-      let index = Cactai.indexOf(theCactai);
-      Cactai.splice(index, 1);
+      if(theCactai.disapeared()){
+        let index = Cactai.indexOf(theCactai);
+        Cactai.splice(index, 1);
+      }
+      else{
+        theCactai.move();
+        theCactai.display();
+        dino.collision(theCactai);
+      }
     }
-    else{
-      theCactai.move();
-      theCactai.display();
-      dino.collision(theCactai);
-    }
+    dino.switchBetweenDinos();
+    dino.run();
+    dino.display();
   }
-  dino.switchBetweenDinos();
-  dino.run();
-  dino.display();
+  
   
 }
 
 function keyPressed(){
-  if(key === " "){
+  if(key === " " && state1 === "startScreen"){
+    state1 = "playing";
+  }
+  else if(key === " " && state1 === "playing"){
     dino.jump();
-    state = "isDinoJump";
+    state2 = "isDinoJump";
     lastTimeSwitched = millis();
   }
 }
 
+function startScreen(){
+  background(grassBackground);
+  dino.display();
+}
 
-// function time(){
-//   milliSecond = int(millis()/100);
-//   if(mouseIsPressed){
-//     startTime = int(millis()/100);
-//   }
-//   if (milliSecond > 0){
-//     milliSecond = milliSecond - startTime; //minus the millis from total from millis of start screen
-//   }
-//   text(milliSecond, width/2, height/2);
-// }
+function time(){
+  milliSecond = int(millis()/100);
+  if(state2 === "isDinoJump"){
+    startTime = int(millis()/100);
+  }
+  
+  if (milliSecond > 0){
+    milliSecond = milliSecond - startTime; //minus the millis from total from millis of start screen
+  }
+  text(milliSecond, width - 50, 40);
+}
 
