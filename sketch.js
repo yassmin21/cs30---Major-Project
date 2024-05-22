@@ -67,7 +67,7 @@ class Dinosour{
 
   jump(){
     if(this.y === height - height/4.3){
-      this.velocity = -45;
+      this.velocity = -47;
     }
       
   }
@@ -118,8 +118,12 @@ class Dinosour{
   
   collision(Cactus){
     
-    hit = collideRectRect(this.x, this.y, this.w, this.w, Cactus.x, Cactus.y, Cactus.w, Cactus.h);
-    
+    //debugging
+    // circle(this.x + this.w/2, this.y + this.w/2, this.w);
+    // rect(Cactus.x, Cactus.y, Cactus.w, Cactus.h);
+
+    // hit = collideRectRect(this.x, this.y, this.w, this.w, Cactus.x, Cactus.y, Cactus.w, Cactus.h);
+    hit = collideRectCircle( Cactus.x, Cactus.y, Cactus.w, Cactus.h, this.x + this.w/2,this.y + this.w/2, this.w);
     
     if(hit){
       state1 = "dead";
@@ -188,20 +192,23 @@ let cactais;
 function setup(){
   createCanvas(windowWidth, windowHeight);
   dino = new Dinosour(this.x, this.y);
-  
+  textSize(30);
   
 }
 
 
 function draw(){
+  highScoreCount();
+  displayTime();
   if(state1 === "startScreen"){
     startScreen();
     startTime = int(millis()/100);
+    highScoreCount();
   }
   else if(state1 === "playing"){
     background(grassBackground);
     time();
-    highScoreCount();
+    // highScoreCount();
 
     // let distance = random(110, 200);
     if(frameCount % 150 === 0){
@@ -217,14 +224,14 @@ function draw(){
       }
       else{
         theCactai.move();
-        theCactai.display();
         dino.collision(theCactai);
+        theCactai.display();
       }
     }
-
+    dino.display();
     dino.switchBetweenDinos();
     dino.run();
-    dino.display();
+    
   }
   else if(state1 === "dead"){
     resetGame();
@@ -254,25 +261,30 @@ function time(){
   if (milliSecond > 0){
     milliSecond = milliSecond - startTime; //minus the millis from total from millis of start screen
   }
-  text(milliSecond, width - 50, 40);
+  // text(milliSecond, width - 70, 60);
+  // text(highScore, width - 150, 60);
 }
 
 function highScoreCount(){
-  if(state2 === "playing" && milliSecond > highScore){
+  if( milliSecond > highScore){
     highScore = milliSecond;
   }
-  text(highScore, width - 100, 40);
+}
+
+function displayTime(){
+  text(milliSecond, width - 70, 60);
+  text(highScore, width - 150, 60);
 }
 
 function resetGame (){
-    if (state1 === "dead" && mouseIsPressed) {
-      state1 = "startScreen";
-      //removes cactus
-      for(let theCactai of Cactai){
-        let index = Cactai.indexOf(theCactai);
-        Cactai.splice(index, 2);
-      }
-      dino.resetDino();
-      milliSecond = 0;
+  if (state1 === "dead" && mouseIsPressed) {
+    state1 = "startScreen";
+    //removes cactus
+    for(let theCactai of Cactai){
+      let index = Cactai.indexOf(theCactai);
+      Cactai.splice(index, 2);
     }
+    dino.resetDino();
+    milliSecond = 0;
+  }
 }
