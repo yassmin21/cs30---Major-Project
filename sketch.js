@@ -18,6 +18,7 @@ let grassBackground;
 let cactusPicture;
 let twoCactus;
 let moreCactus;
+let resetBottonImage;
 
 let imageOfCactai;
 let a;
@@ -48,6 +49,7 @@ function preload(){
   cactusPicture = loadImage("cactus.png");
   twoCactus = loadImage("two cactai.png");
   moreCactus = loadImage("a lot of cactai.png");
+  resetBottonImage = loadImage("resetButton.png");
 }
 
 let Cactai = [];
@@ -119,11 +121,11 @@ class Dinosour{
   collision(Cactus){
     
     //debugging
-    // circle(this.x + this.w/2, this.y + this.w/2, this.w);
-    // rect(Cactus.x, Cactus.y, Cactus.w, Cactus.h);
+    circle(this.x + this.w/2 - 10, this.y + this.w/2 - 10, this.w - 20);
+    rect(Cactus.x, Cactus.y, Cactus.w, Cactus.h);
 
     // hit = collideRectRect(this.x, this.y, this.w, this.w, Cactus.x, Cactus.y, Cactus.w, Cactus.h);
-    hit = collideRectCircle( Cactus.x, Cactus.y, Cactus.w, Cactus.h, this.x + this.w/2,this.y + this.w/2, this.w);
+    hit = collideRectCircle( Cactus.x, Cactus.y, Cactus.w, Cactus.h, this.x + this.w/2 - 10, this.y + this.w/2 - 10, this.w - 20);
     
     if(hit){
       state1 = "dead";
@@ -188,28 +190,40 @@ class Cactus{
 let dino;
 let cactais;
 
+let resetBotton;
+let state3 = "notOnPress";
+
 //600, 250
 function setup(){
   createCanvas(windowWidth, windowHeight);
   dino = new Dinosour(this.x, this.y);
   textSize(30);
-  
+  resetBotton = new Clickable();
+  resetBotton.locate(windowWidth/2 - 30, windowHeight/2);
+  resetBotton.onPress = changePress;
+  resetBotton.image = resetBottonImage;
+  resetBotton.fitImage = true; 
+  resetBotton.text = " ";  
+  resetBotton.strokeWeight = 0;
+
 }
 
 
 function draw(){
   highScoreCount();
-  displayTime();
+  displayScore();
   if(state1 === "startScreen"){
+    state3 = "notOnPress";
     startScreen();
     startTime = int(millis()/100);
     highScoreCount();
+    
   }
   else if(state1 === "playing"){
     background(grassBackground);
     time();
     // highScoreCount();
-
+    displayScore();
     // let distance = random(110, 200);
     if(frameCount % 150 === 0){
       cactais = new Cactus(this.x, this.y, this.imageOfCactai);
@@ -235,6 +249,8 @@ function draw(){
   }
   else if(state1 === "dead"){
     resetGame();
+    displayHighScore();
+    resetBotton.draw();
   }
 }
 
@@ -271,13 +287,17 @@ function highScoreCount(){
   }
 }
 
-function displayTime(){
+function displayScore(){
   text(milliSecond, width - 70, 60);
+  
+}
+
+function displayHighScore(){
   text(highScore, width - 150, 60);
 }
 
 function resetGame (){
-  if (state1 === "dead" && mouseIsPressed) {
+  if (state1 === "dead" && state3  === "onPress") {
     state1 = "startScreen";
     //removes cactus
     for(let theCactai of Cactai){
@@ -287,4 +307,8 @@ function resetGame (){
     dino.resetDino();
     milliSecond = 0;
   }
+}
+
+function changePress(){
+  state3 = "onPress";
 }
