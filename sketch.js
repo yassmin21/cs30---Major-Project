@@ -64,14 +64,14 @@ class Dinosour{
     this.y = height - height/4.3;
     this.w = height/7;
     this.h = this.w;
-    this.gravity = 2.8;
+    this.gravity = 5;
     this.velocity = 0;
 
   }
 
   jump(){
     if(this.y === height - height/4.3){
-      this.velocity = -47;
+      this.velocity = -55;
     }
       
   }
@@ -113,7 +113,7 @@ class Dinosour{
       state2 = "isLeftFoot";
       lastTimeSwitched = millis();
     }
-    else if(state2 === "isDinoJump" && millis() > lastTimeSwitched + 700){
+    else if(state2 === "isDinoJump" && millis() > lastTimeSwitched + 900){
       state2 = "isLeftFoot";
       lastTimeSwitched = millis();
     }
@@ -150,7 +150,7 @@ class Cactus{
     //50
     this.w = width/ 20;
     //30
-    this.speed = 11;
+    this.speed = 25;
     this.a = cactusPicture;
     this.b = twoCactus;
     this.c = moreCactus;
@@ -227,7 +227,7 @@ function draw(){
     // highScoreCount();
     displayScore();
     // let distance = random(110, 200);
-    if(frameCount % 150 === 0){
+    if(frameCount % 60 === 0){
       cactais = new Cactus(this.x, this.y, this.imageOfCactai);
       Cactai.push(cactais);
     }
@@ -236,7 +236,7 @@ function draw(){
     for(let theCactai of Cactai){
       if(theCactai.disapeared()){
         let index = Cactai.indexOf(theCactai);
-        Cactai.splice(index, 1);
+        Cactai.splice(index, 3);
       }
       else{
         theCactai.move();
