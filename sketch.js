@@ -303,7 +303,7 @@ function resetGame (){
     //removes cactus
     for(let theCactai of Cactai){
       let index = Cactai.indexOf(theCactai);
-      Cactai.splice(index, 2);
+      Cactai.splice(index, 1);
     }
     dino.resetDino();
     milliSecond = 0;
