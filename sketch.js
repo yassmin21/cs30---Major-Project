@@ -19,6 +19,7 @@ let cactusPicture;
 let twoCactus;
 let moreCactus;
 let resetBottonImage;
+let gameOverImage;
 
 let imageOfCactai;
 let a;
@@ -50,6 +51,7 @@ function preload(){
   twoCactus = loadImage("two cactai.png");
   moreCactus = loadImage("a lot of cactai.png");
   resetBottonImage = loadImage("resetButton.png");
+  gameOverImage = loadImage("gameover.png");
 }
 
 let Cactai = [];
@@ -121,8 +123,8 @@ class Dinosour{
   collision(Cactus){
     
     //debugging
-    circle(this.x + this.w/2 - 10, this.y + this.w/2 - 10, this.w - 20);
-    rect(Cactus.x, Cactus.y, Cactus.w, Cactus.h);
+    // circle(this.x + this.w/2 - 10, this.y + this.w/2 - 10, this.w - 20);
+    // rect(Cactus.x, Cactus.y, Cactus.w, Cactus.h);
 
     // hit = collideRectRect(this.x, this.y, this.w, this.w, Cactus.x, Cactus.y, Cactus.w, Cactus.h);
     hit = collideRectCircle( Cactus.x, Cactus.y, Cactus.w, Cactus.h, this.x + this.w/2 - 10, this.y + this.w/2 - 10, this.w - 20);
@@ -249,8 +251,7 @@ function draw(){
   }
   else if(state1 === "dead"){
     resetGame();
-    displayHighScore();
-    resetBotton.draw();
+    displayGameOver();
   }
 }
 
@@ -311,4 +312,10 @@ function resetGame (){
 
 function changePress(){
   state3 = "onPress";
+}
+
+function displayGameOver(){
+  displayHighScore();
+  resetBotton.draw();
+  image(gameOverImage, width/3.8, height/4, width/2, height/18);
 }
