@@ -37,7 +37,7 @@ let duration = 70;
 let state1 = "startScreen";
 let state2 = "isDinoJump";
 
-
+let font;
 //state dead
 //92 97
 
@@ -52,6 +52,7 @@ function preload(){
   moreCactus = loadImage("a lot of cactai.png");
   resetBottonImage = loadImage("resetButton.png");
   gameOverImage = loadImage("gameover.png");
+  font = loadFont("font.ttf");
 }
 
 let Cactai = [];
@@ -113,7 +114,7 @@ class Dinosour{
       state2 = "isLeftFoot";
       lastTimeSwitched = millis();
     }
-    else if(state2 === "isDinoJump" && millis() > lastTimeSwitched + 900){
+    else if(state2 === "isDinoJump" && millis() > lastTimeSwitched + 650){
       state2 = "isLeftFoot";
       lastTimeSwitched = millis();
     }
@@ -150,7 +151,7 @@ class Cactus{
     //50
     this.w = width/ 20;
     //30
-    this.speed = 25;
+    this.speed = 23;
     this.a = cactusPicture;
     this.b = twoCactus;
     this.c = moreCactus;
@@ -192,22 +193,28 @@ class Cactus{
 let dino;
 let cactais;
 
-let resetBotton;
+let resetButton;
 let state3 = "notOnPress";
+
+let howToPlayButton;
 
 //600, 250
 function setup(){
   createCanvas(windowWidth, windowHeight);
   dino = new Dinosour(this.x, this.y);
   textSize(30);
-  resetBotton = new Clickable();
-  resetBotton.locate(windowWidth/2 - 30, windowHeight/2);
-  resetBotton.onPress = changePress;
-  resetBotton.image = resetBottonImage;
-  resetBotton.fitImage = true; 
-  resetBotton.text = " ";  
-  resetBotton.strokeWeight = 0;
+  resetButton = new Clickable();
+  resetButton.locate(windowWidth/2 - 30, windowHeight/2);
+  resetButton.onPress = changePress;
+  resetButton.image = resetBottonImage;
+  resetButton.fitImage = true; 
+  resetButton.text = " ";  
+  resetButton.strokeWeight = 0;
 
+  textFont(font);
+  howToPlayButton = new Clickable();
+  howToPlayButton.locate(50, 50);
+  howToPlayButton.onPress = changePress;
 }
 
 
@@ -253,6 +260,9 @@ function draw(){
     resetGame();
     displayGameOver();
   }
+  else if(state1 === "howTo"){
+    displayHowTo();
+  }
 }
 
 function keyPressed(){
@@ -270,6 +280,7 @@ function keyPressed(){
 function startScreen(){
   background(grassBackground);
   dino.display();
+  howToPlayButton.draw();
 }
 //change to part only of image
 
@@ -289,12 +300,12 @@ function highScoreCount(){
 }
 
 function displayScore(){
-  text(milliSecond, width - 70, 60);
+  text(milliSecond, width - 100, 60);
   
 }
 
 function displayHighScore(){
-  text(highScore, width - 150, 60);
+  text(highScore, width - 200, 60);
 }
 
 function resetGame (){
@@ -303,7 +314,7 @@ function resetGame (){
     //removes cactus
     for(let theCactai of Cactai){
       let index = Cactai.indexOf(theCactai);
-      Cactai.splice(index, 1);
+      Cactai.splice(index, 2);
     }
     dino.resetDino();
     milliSecond = 0;
@@ -311,11 +322,23 @@ function resetGame (){
 }
 
 function changePress(){
-  state3 = "onPress";
+  if(state1 === "dead"){
+    state3 = "onPress";
+  }
+  else if(state1 === "startScreen"){
+    state1 = "howTo";
+  }
+  
 }
 
 function displayGameOver(){
   displayHighScore();
-  resetBotton.draw();
+  resetButton.draw();
   image(gameOverImage, width/3.8, height/4, width/2, height/18);
+}
+
+function displayHowTo(){
+  background(grassBackground);
+  text("press space to jump", 150, 150);
+  dino.display();
 }
