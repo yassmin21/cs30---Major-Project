@@ -213,8 +213,18 @@ function setup(){
 
   textFont(font);
   howToPlayButton = new Clickable();
-  howToPlayButton.locate(50, 50);
+  howToPlayButton.locate(20, 20);
   howToPlayButton.onPress = changePress;
+  howToPlayButton.cornerRadius = 30;
+  howToPlayButton.text = "i"; 
+  howToPlayButton.textFont = font;
+  howToPlayButton.textSize = 15;  
+  howToPlayButton.resize(50, 50);
+
+  howToPlayButton.color = "255,255,255"; 
+  howToPlayButton.onHover = function(){
+    howToPlayButton = "";
+  };
 }
 
 
@@ -339,6 +349,9 @@ function displayGameOver(){
 
 function displayHowTo(){
   background(grassBackground);
-  text("press space to jump", 150, 150);
-  dino.display();
+  text("press space to jump", width/2 - 300, 170);
+  text("the score is how long you have been playing", width/2 - 650, 340);
+  text("try not to die!!", width/2 - 250, 510);
+  line(width/2 - 200, 90, width/2 + 150, 90);
+  line(width/2 - 200, 565, width/2 + 150, 565);
 }
