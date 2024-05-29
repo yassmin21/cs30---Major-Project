@@ -20,6 +20,9 @@ let twoCactus;
 let moreCactus;
 let resetBottonImage;
 let gameOverImage;
+let button1;
+let jumpSound;
+let crashSound;
 
 let imageOfCactai;
 let a;
@@ -53,6 +56,9 @@ function preload(){
   resetBottonImage = loadImage("resetButton.png");
   gameOverImage = loadImage("gameover.png");
   font = loadFont("font.ttf");
+  button1 = loadImage("button1.png");
+  jumpSound = loadSound("jump.wav");
+  crashSound = loadSound("die.wav");
 }
 
 let Cactai = [];
@@ -73,6 +79,7 @@ class Dinosour{
   jump(){
     if(this.y === height - height/4.3){
       this.velocity = -55;
+      jumpSound.play();
     }
       
   }
@@ -114,7 +121,7 @@ class Dinosour{
       state2 = "isLeftFoot";
       lastTimeSwitched = millis();
     }
-    else if(state2 === "isDinoJump" && millis() > lastTimeSwitched + 650){
+    else if(state2 === "isDinoJump" && millis() > lastTimeSwitched + 550){
       state2 = "isLeftFoot";
       lastTimeSwitched = millis();
     }
@@ -131,6 +138,7 @@ class Dinosour{
     hit = collideRectCircle( Cactus.x, Cactus.y, Cactus.w, Cactus.h, this.x + this.w/2 - 10, this.y + this.w/2 - 10, this.w - 20);
     
     if(hit){
+      crashSound.play();
       state1 = "dead";
     }
   }
@@ -163,8 +171,6 @@ class Cactus{
 
   move(){
     this.x -= this.speed;
-    
-    
   }
 
   display(){
@@ -201,6 +207,7 @@ let howToPlayButton;
 //600, 250
 function setup(){
   createCanvas(windowWidth, windowHeight);
+  fill("grey");
   dino = new Dinosour(this.x, this.y);
   textSize(30);
   resetButton = new Clickable();
@@ -213,33 +220,48 @@ function setup(){
 
   textFont(font);
   howToPlayButton = new Clickable();
-  howToPlayButton.locate(20, 20);
+  howToPlayButton.locate(width - 90, 100);
   howToPlayButton.onPress = changePress;
-  howToPlayButton.cornerRadius = 30;
+  howToPlayButton.cornerRadius = 3;
+  // howToPlayButton.image = button1;
+  // howToPlayButton.fitImage = true; 
   howToPlayButton.text = "i"; 
   howToPlayButton.textFont = font;
-  howToPlayButton.textSize = 15;  
+  howToPlayButton.strokeWeight = 3;
+  howToPlayButton.textSize = 30;  
   howToPlayButton.resize(50, 50);
-
-  howToPlayButton.color = "255,255,255"; 
-  howToPlayButton.onHover = function(){
-    howToPlayButton = "";
-  };
+  howToPlayButton.textColor = "grey"; 
+  howToPlayButton.stroke = "grey";  
+  // if(howToPlayButton.onHover ){
+  //   howToPlayButton.color = "0,0,0";
+  // }
+  // else{
+  //   howToPlayButton.color = "255, 255, 255";
+  // }
+  
+  
+  // howToPlayButton.onHover = function(){
+  //   howToPlayButton.color = "0,0,0";
+  // };
 }
 
+// let colour ;
 
 function draw(){
   highScoreCount();
   displayScore();
+ 
+  // changeColourIfHover();
   if(state1 === "startScreen"){
     state3 = "notOnPress";
     startScreen();
     startTime = int(millis()/100);
     highScoreCount();
-    
+    howToPlayButton.draw();
   }
   else if(state1 === "playing"){
     background(grassBackground);
+    howToPlayButton.draw();
     time();
     // highScoreCount();
     displayScore();
@@ -267,6 +289,7 @@ function draw(){
     
   }
   else if(state1 === "dead"){
+    howToPlayButton.draw();
     resetGame();
     displayGameOver();
   }
@@ -290,7 +313,7 @@ function keyPressed(){
 function startScreen(){
   background(grassBackground);
   dino.display();
-  howToPlayButton.draw();
+  // howToPlayButton.draw();
 }
 //change to part only of image
 
@@ -315,7 +338,7 @@ function displayScore(){
 }
 
 function displayHighScore(){
-  text(highScore, width - 200, 60);
+  text(highScore, width - 230, 60);
 }
 
 function resetGame (){
@@ -355,3 +378,13 @@ function displayHowTo(){
   line(width/2 - 200, 90, width/2 + 150, 90);
   line(width/2 - 200, 565, width/2 + 150, 565);
 }
+
+// function changeColourIfHover(){
+//   if(howToPlayButton.onHover ){
+//     colour = "0,0,0";
+//   }
+//   else{
+//     colour = "255, 255, 255";
+//   }
+  
+// }
