@@ -204,12 +204,15 @@ let state3 = "notOnPress";
 
 let howToPlayButton;
 
+let existHowToPlay;
+
 //600, 250
 function setup(){
   createCanvas(windowWidth, windowHeight);
   fill("grey");
   dino = new Dinosour(this.x, this.y);
   textSize(30);
+  // eslint-disable-next-line no-undef
   resetButton = new Clickable();
   resetButton.locate(windowWidth/2 - 30, windowHeight/2);
   resetButton.onPress = changePress;
@@ -219,6 +222,7 @@ function setup(){
   resetButton.strokeWeight = 0;
 
   textFont(font);
+  // eslint-disable-next-line no-undef
   howToPlayButton = new Clickable();
   howToPlayButton.locate(width - 90, 100);
   howToPlayButton.onPress = changePress;
@@ -232,17 +236,12 @@ function setup(){
   howToPlayButton.resize(50, 50);
   howToPlayButton.textColor = "grey"; 
   howToPlayButton.stroke = "grey";  
-  // if(howToPlayButton.onHover ){
-  //   howToPlayButton.color = "0,0,0";
-  // }
-  // else{
-  //   howToPlayButton.color = "255, 255, 255";
-  // }
-  
-  
-  // howToPlayButton.onHover = function(){
-  //   howToPlayButton.color = "0,0,0";
-  // };
+
+  existHowToPlay = new Clickable();
+  existHowToPlay.locate(width - 90, 400);
+  existHowToPlay.onPress = changePress;
+  existHowToPlay.cornerRadius = 3;
+
 }
 
 // let colour ;
@@ -361,7 +360,9 @@ function changePress(){
   else if(state1 === "startScreen"){
     state1 = "howTo";
   }
-  
+  else if(state1 === "howTo"){
+    state1 = "startScreen";
+  }
 }
 
 function displayGameOver(){
@@ -371,7 +372,9 @@ function displayGameOver(){
 }
 
 function displayHowTo(){
+  
   background(grassBackground);
+  existHowToPlay.draw();
   text("press space to jump", width/2 - 300, 170);
   text("the score is how long you have been playing", width/2 - 650, 340);
   text("try not to die!!", width/2 - 250, 510);
