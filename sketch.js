@@ -14,6 +14,7 @@ let dinoleft;
 let dinoRight;
 let dinoJump;
 let dinoDead;
+let bearLeft;
 let grassBackground;
 let cactusPicture;
 let twoCactus;
@@ -49,6 +50,7 @@ function preload(){
   dinoRight = loadImage("runing dino right.png");
   dinoJump = loadImage("running dino jump.png");
   dinoDead = loadImage("dino dead.png");
+  bearLeft = loadImage("bearLeft.png");
   grassBackground = loadImage("background.png");
   cactusPicture = loadImage("cactus.png");
   twoCactus = loadImage("two cactai.png");
@@ -64,13 +66,14 @@ function preload(){
 let Cactai = [];
 let milliSecond;
 let startTime;
+let state4;
 
 class Dinosour{
   constructor(x, y){
     this.x = 60;
     this.y = height - height/4.3;
-    this.w = height/7;
-    this.h = this.w;
+    this.wD = height/7;
+    this.hD = this.wD;
     this.gravity = 5;
     this.velocity = 0;
 
@@ -135,7 +138,7 @@ class Dinosour{
     // rect(Cactus.x, Cactus.y, Cactus.w, Cactus.h);
 
     // hit = collideRectRect(this.x, this.y, this.w, this.w, Cactus.x, Cactus.y, Cactus.w, Cactus.h);
-    hit = collideRectCircle( Cactus.x, Cactus.y, Cactus.w, Cactus.h, this.x + this.w/2 - 10, this.y + this.w/2 - 10, this.w - 20);
+    hit = collideRectCircle( Cactus.x, Cactus.y, Cactus.w, Cactus.h, this.x + this.w/2 - 10, this.y + this.wD/2 - 10, this.wD - 20);
     
     if(hit){
       crashSound.play();
@@ -227,8 +230,6 @@ function setup(){
   howToPlayButton.locate(width - 90, 100);
   howToPlayButton.onPress = changePress;
   howToPlayButton.cornerRadius = 3;
-  // howToPlayButton.image = button1;
-  // howToPlayButton.fitImage = true; 
   howToPlayButton.text = "i"; 
   howToPlayButton.textFont = font;
   howToPlayButton.strokeWeight = 3;
@@ -237,14 +238,27 @@ function setup(){
   howToPlayButton.textColor = "grey"; 
   howToPlayButton.stroke = "grey";  
 
+  // eslint-disable-next-line no-undef
   existHowToPlay = new Clickable();
-  existHowToPlay.locate(width - 90, 400);
+  existHowToPlay.locate(width - 90, 50);
   existHowToPlay.onPress = changePress;
   existHowToPlay.cornerRadius = 3;
+  existHowToPlay.text = "X"; 
+  existHowToPlay.textFont = font;
+  existHowToPlay.strokeWeight = 3;
+  existHowToPlay.textSize = 30;  
+  existHowToPlay.resize(50, 50);
+  existHowToPlay.textColor = "grey"; 
+  existHowToPlay.stroke = "grey";  
 
+  x2 = width;
 }
 
 // let colour ;
+
+let x1 = 0;
+let x2;
+let scrollSpeed = 23;
 
 function draw(){
   highScoreCount();
@@ -259,7 +273,18 @@ function draw(){
     howToPlayButton.draw();
   }
   else if(state1 === "playing"){
-    background(grassBackground);
+    // background(grassBackground);
+    image(grassBackground, x1, 0, width, height);
+    image(grassBackground, x2, 0, width, height);
+    x1 -= scrollSpeed;
+    x2 -= scrollSpeed;
+    
+    if (x1 < -width){
+      x1 = width;
+    }
+    if (x2 < -width){
+      x2 = width;
+    }
     howToPlayButton.draw();
     time();
     // highScoreCount();
@@ -382,12 +407,6 @@ function displayHowTo(){
   line(width/2 - 200, 565, width/2 + 150, 565);
 }
 
-// function changeColourIfHover(){
-//   if(howToPlayButton.onHover ){
-//     colour = "0,0,0";
-//   }
-//   else{
-//     colour = "255, 255, 255";
-//   }
-  
-// }
+function moveBackground(){
+   
+}
