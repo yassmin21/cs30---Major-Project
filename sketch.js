@@ -24,6 +24,7 @@ let gameOverImage;
 let button1;
 let jumpSound;
 let crashSound;
+let cloadsBackground;
 
 let imageOfCactai;
 let a;
@@ -52,6 +53,7 @@ function preload(){
   dinoDead = loadImage("dino dead.png");
   bearLeft = loadImage("bearLeft.png");
   grassBackground = loadImage("background.png");
+  cloadsBackground = loadImage("cloads.png");
   cactusPicture = loadImage("cactus.png");
   twoCactus = loadImage("two cactai.png");
   moreCactus = loadImage("a lot of cactai.png");
@@ -66,13 +68,14 @@ function preload(){
 let Cactai = [];
 let milliSecond;
 let startTime;
-let state4;
+let state4 = "dino";
 
 class Dinosour{
   constructor(x, y){
     this.x = 60;
     this.y = height - height/4.3;
     this.wD = height/7;
+    this.wB = height/4;
     this.hD = this.wD;
     this.gravity = 5;
     this.velocity = 0;
@@ -97,21 +100,33 @@ class Dinosour{
     // rect(this.x, this.y, this.w, this.w);
     
     if(state1 === "startScreen"){
-      image(dinoJump, this.x, this.y, this.w, this.w);
+      if (state4 === "dino"){
+        image(dinoJump, this.x, this.y, this.wD, this.wD);
+      }
+      else if(state4 === "bear"){
+        image(bearLeft, this.x, this.y, this.wB, this.wD);
+      }
     }
     else if(state1 === "playing"){
-      if(state2 === "isLeftFoot"){
-        image(dinoleft, this.x, this.y, this.w, this.w);
-      }
-      else if(state2 === "isRightFoot"){
-        image(dinoRight, this.x, this.y, this.w, this.w);
-      }
-      else if(state2 === "isDinoJump"){
-        image(dinoJump, this.x, this.y, this.w, this.w);
-      }
+        if(state2 === "isLeftFoot"){
+          if (state4 === "dino"){
+            image(dinoleft, this.x, this.y, this.wD, this.wD);
+          }
+          else if(state4 === "bear"){
+            image(bearLeft, this.x, this.y, height/4, this.wD);
+          }
+          
+        }
+        else if(state2 === "isRightFoot"){
+          image(dinoRight, this.x, this.y, this.wD, this.wD);
+        }
+        else if(state2 === "isDinoJump"){
+          image(dinoJump, this.x, this.y, this.wD, this.wD);
+        }
+      
     }
     else if(state1 === "dead"){
-      image(dinoDead, this.x, this.y, this.w, this.w);
+      image(dinoDead, this.x, this.y, this.wD, this.wD);
     }
   }
 
@@ -138,7 +153,7 @@ class Dinosour{
     // rect(Cactus.x, Cactus.y, Cactus.w, Cactus.h);
 
     // hit = collideRectRect(this.x, this.y, this.w, this.w, Cactus.x, Cactus.y, Cactus.w, Cactus.h);
-    hit = collideRectCircle( Cactus.x, Cactus.y, Cactus.w, Cactus.h, this.x + this.w/2 - 10, this.y + this.wD/2 - 10, this.wD - 20);
+    hit = collideRectCircle( Cactus.x, Cactus.y, Cactus.w, Cactus.h, this.x + this.wD/2 - 10, this.y + this.wD/2 - 10, this.wD - 20);
     
     if(hit){
       crashSound.play();
@@ -251,14 +266,18 @@ function setup(){
   existHowToPlay.textColor = "grey"; 
   existHowToPlay.stroke = "grey";  
 
-  x2 = width;
+  x2Cloads = width;
+  x2Grass = width;
 }
 
 // let colour ;
 
-let x1 = 0;
-let x2;
-let scrollSpeed = 23;
+let x1Cloads = 0;
+let x2Cloads;
+let x1Grass = 0;
+let x2Grass;
+let scrollSpeed1 = 23;
+let scrollSpeed2 = 3;
 
 function draw(){
   highScoreCount();
@@ -266,6 +285,7 @@ function draw(){
  
   // changeColourIfHover();
   if(state1 === "startScreen"){
+    
     state3 = "notOnPress";
     startScreen();
     startTime = int(millis()/100);
@@ -274,17 +294,9 @@ function draw(){
   }
   else if(state1 === "playing"){
     // background(grassBackground);
-    image(grassBackground, x1, 0, width, height);
-    image(grassBackground, x2, 0, width, height);
-    x1 -= scrollSpeed;
-    x2 -= scrollSpeed;
+    moveBackgroundCloads();
+    moveBackground();
     
-    if (x1 < -width){
-      x1 = width;
-    }
-    if (x2 < -width){
-      x2 = width;
-    }
     howToPlayButton.draw();
     time();
     // highScoreCount();
@@ -335,7 +347,7 @@ function keyPressed(){
 }
 
 function startScreen(){
-  background(grassBackground);
+  image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
   dino.display();
   // howToPlayButton.draw();
 }
@@ -408,5 +420,29 @@ function displayHowTo(){
 }
 
 function moveBackground(){
-   
+  image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
+  image(grassBackground, x2Grass, height - height/3.8, width, height - height/1.3);
+  x1Grass -= scrollSpeed1;
+  x2Grass -= scrollSpeed1;
+  
+  if (x1Grass < -width){
+    x1Grass = width;
+  }
+  if (x2Grass < -width){
+    x2Grass = width;
+  }
+}
+
+function moveBackgroundCloads(){
+  image(cloadsBackground, x1Cloads, 0, width, height);
+  image(cloadsBackground, x2Cloads, 0, width, height);
+  x1Cloads -= scrollSpeed2;
+  x2Cloads -= scrollSpeed2;
+  
+  if (x1Cloads < -width){
+    x1Cloads = width;
+  }
+  if (x2Cloads < -width){
+    x2Cloads = width;
+  }
 }
