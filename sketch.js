@@ -14,7 +14,7 @@ let dinoleft;
 let dinoRight;
 let dinoJump;
 let dinoDead;
-let bearLeft;
+let dinoTank;
 let grassBackground;
 let cactusPicture;
 let twoCactus;
@@ -51,7 +51,7 @@ function preload(){
   dinoRight = loadImage("runing dino right.png");
   dinoJump = loadImage("running dino jump.png");
   dinoDead = loadImage("dino dead.png");
-  bearLeft = loadImage("bearLeft.png");
+  dinoTank = loadImage("dinoTank.png");
   grassBackground = loadImage("background.png");
   cloadsBackground = loadImage("cloads.png");
   cactusPicture = loadImage("cactus.png");
@@ -98,24 +98,14 @@ class Dinosour{
 
   display(){
     // rect(this.x, this.y, this.w, this.w);
-    
-    if(state1 === "startScreen"){
-      if (state4 === "dino"){
+    if (state4 === "dino"){
+      if(state1 === "startScreen"){
         image(dinoJump, this.x, this.y, this.wD, this.wD);
       }
-      else if(state4 === "bear"){
-        image(bearLeft, this.x, this.y, this.wB, this.wD);
-      }
-    }
-    else if(state1 === "playing"){
+
+      else if(state1 === "playing"){
         if(state2 === "isLeftFoot"){
-          if (state4 === "dino"){
-            image(dinoleft, this.x, this.y, this.wD, this.wD);
-          }
-          else if(state4 === "bear"){
-            image(bearLeft, this.x, this.y, height/4, this.wD);
-          }
-          
+          image(dinoleft, this.x, this.y, this.wD, this.wD);
         }
         else if(state2 === "isRightFoot"){
           image(dinoRight, this.x, this.y, this.wD, this.wD);
@@ -124,10 +114,16 @@ class Dinosour{
           image(dinoJump, this.x, this.y, this.wD, this.wD);
         }
       
+      }
+      else if(state1 === "dead"){
+        image(dinoDead, this.x, this.y, this.wD, this.wD);
+      }
     }
-    else if(state1 === "dead"){
-      image(dinoDead, this.x, this.y, this.wD, this.wD);
+    else if(state4 === "tank"){
+      image(dinoTank, this.x, this.y, this.wD + 20, this.wD);
     }
+    
+    
   }
 
   switchBetweenDinos(){
@@ -285,7 +281,7 @@ function draw(){
  
   // changeColourIfHover();
   if(state1 === "startScreen"){
-    
+    background(cloadsBackground);
     state3 = "notOnPress";
     startScreen();
     startTime = int(millis()/100);
@@ -383,7 +379,7 @@ function resetGame (){
     //removes cactus
     for(let theCactai of Cactai){
       let index = Cactai.indexOf(theCactai);
-      Cactai.splice(index, 2);
+      Cactai.splice(index, 1);
     }
     dino.resetDino();
     milliSecond = 0;
