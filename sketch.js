@@ -16,6 +16,7 @@ let dinoJump;
 let dinoDead;
 let dinoTank;
 let grassBackground;
+let grassFullBackground;
 let cactusPicture;
 let twoCactus;
 let moreCactus;
@@ -54,6 +55,7 @@ function preload(){
   dinoTank = loadImage("dinoTank.png");
   grassBackground = loadImage("background.png");
   cloadsBackground = loadImage("cloads.png");
+  grassFullBackground = loadImage("backgroundfull.png");
   cactusPicture = loadImage("cactus.png");
   twoCactus = loadImage("two cactai.png");
   moreCactus = loadImage("a lot of cactai.png");
@@ -68,7 +70,7 @@ function preload(){
 let Cactai = [];
 let milliSecond;
 let startTime;
-let state4 = "dino";
+let state4 = "tank";
 
 class Dinosour{
   constructor(x, y){
@@ -281,8 +283,7 @@ function draw(){
  
   // changeColourIfHover();
   if(state1 === "startScreen"){
-    background(cloadsBackground);
-    state3 = "notOnPress";
+    
     startScreen();
     startTime = int(millis()/100);
     highScoreCount();
@@ -290,8 +291,10 @@ function draw(){
   }
   else if(state1 === "playing"){
     // background(grassBackground);
+    state3 = "notOnPress";
     moveBackgroundCloads();
     moveBackground();
+    
     
     howToPlayButton.draw();
     time();
@@ -306,8 +309,9 @@ function draw(){
 
     for(let theCactai of Cactai){
       if(theCactai.disapeared()){
-        let index = Cactai.indexOf(theCactai);
-        Cactai.splice(index, 3);
+        // let index = Cactai.indexOf(theCactai);
+        // Cactai.splice(index, 3);
+        Cactai = [];
       }
       else{
         theCactai.move();
@@ -343,7 +347,9 @@ function keyPressed(){
 }
 
 function startScreen(){
+  image(cloadsBackground, x1Cloads, 0, width, height);
   image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
+
   dino.display();
   // howToPlayButton.draw();
 }
@@ -375,12 +381,13 @@ function displayHighScore(){
 
 function resetGame (){
   if (state1 === "dead" && state3  === "onPress") {
-    state1 = "startScreen";
+    state1 = "playing";
     //removes cactus
-    for(let theCactai of Cactai){
-      let index = Cactai.indexOf(theCactai);
-      Cactai.splice(index, 1);
-    }
+    // for(let theCactai of Cactai){
+    //   let index = Cactai.indexOf(theCactai);
+    //   Cactai.splice(index, 1);
+    // }
+    Cactai = [];
     dino.resetDino();
     milliSecond = 0;
   }
@@ -390,7 +397,7 @@ function changePress(){
   if(state1 === "dead"){
     state3 = "onPress";
   }
-  else if(state1 === "startScreen"){
+  else if(state1 === "playing"){
     state1 = "howTo";
   }
   else if(state1 === "howTo"){
@@ -406,7 +413,7 @@ function displayGameOver(){
 
 function displayHowTo(){
   
-  background(grassBackground);
+  background(grassFullBackground);
   existHowToPlay.draw();
   text("press space to jump", width/2 - 300, 170);
   text("the score is how long you have been playing", width/2 - 650, 340);
