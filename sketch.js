@@ -11,11 +11,15 @@
 // make it look like the game score
 
 let dinoleft;
+let darkDinoLeft;
 let dinoRight;
+let darkDinoRight;
 let dinoJump;
+let darkDinoJump;
 let dinoDead;
 let dinoTank;
 let grassBackground;
+let darkModeGrassBackground;
 let grassFullBackground;
 let cactusPicture;
 let twoCactus;
@@ -26,6 +30,8 @@ let button1;
 let jumpSound;
 let crashSound;
 let cloadsBackground;
+let darkCloadsBackground;
+
 
 let imageOfCactai;
 let a;
@@ -49,12 +55,17 @@ let font;
 
 function preload(){
   dinoleft = loadImage("running dino left.png");
+  darkDinoLeft = loadImage("dark running dino left.png");
   dinoRight = loadImage("runing dino right.png");
+  darkDinoRight = loadImage("dark running dino right.png");
   dinoJump = loadImage("running dino jump.png");
+  darkDinoJump = loadImage("darkDinoJump.png");
   dinoDead = loadImage("dino dead.png");
-  dinoTank = loadImage("dinoTank.png");
+  // dinoTank = loadImage("dinoTank.png");
   grassBackground = loadImage("background.png");
+  darkModeGrassBackground = loadImage("darkModeGrass.png");
   cloadsBackground = loadImage("cloads.png");
+  darkCloadsBackground = loadImage("darkCloads.png");
   grassFullBackground = loadImage("backgroundfull.png");
   cactusPicture = loadImage("cactus.png");
   twoCactus = loadImage("two cactai.png");
@@ -70,7 +81,7 @@ function preload(){
 let Cactai = [];
 let milliSecond;
 let startTime;
-let state4 = "tank";
+let stateDark = "dark";
 
 class Dinosour{
   constructor(x, y){
@@ -100,30 +111,55 @@ class Dinosour{
 
   display(){
     // rect(this.x, this.y, this.w, this.w);
-    if (state4 === "dino"){
       if(state1 === "startScreen"){
-        image(dinoJump, this.x, this.y, this.wD, this.wD);
+        if(stateDark === "light"){
+          image(dinoJump, this.x, this.y, this.wD, this.wD);
+        }
+        else if(stateDark === "dark"){
+          image(darkDinoJump, this.x, this.y, this.wD, this.wD);
+        }
       }
 
       else if(state1 === "playing"){
         if(state2 === "isLeftFoot"){
-          image(dinoleft, this.x, this.y, this.wD, this.wD);
+          if(stateDark === "light"){
+            image(dinoleft, this.x, this.y, this.wD, this.wD);
+          }
+          else if(stateDark === "dark"){
+            image(darkDinoLeft, this.x, this.y, this.wD, this.wD);
+          }
         }
         else if(state2 === "isRightFoot"){
-          image(dinoRight, this.x, this.y, this.wD, this.wD);
+          if(stateDark === "light"){
+            image(dinoRight, this.x, this.y, this.wD, this.wD);
+          }
+          else if(stateDark === "dark"){
+            image(darkDinoRight, this.x, this.y, this.wD, this.wD);
+          }
         }
         else if(state2 === "isDinoJump"){
-          image(dinoJump, this.x, this.y, this.wD, this.wD);
+          if(stateDark === "light"){
+            image(dinoJump, this.x, this.y, this.wD, this.wD);
+          }
+          else if(stateDark === "dark"){
+            image(darkDinoJump, this.x, this.y, this.wD, this.wD);
+          }
         }
       
-      }
-      else if(state1 === "dead"){
+      
+    }
+    else if(state1 === "dead"){
+      // if(stateDark === "light"){
+      //   image(dinoRight, this.x, this.y, this.wD, this.wD);
+      // }
+      // else if(stateDark === "dark"){
+      //   image(darkDinoRight, this.x, this.y, this.wD, this.wD);
+      // }
         image(dinoDead, this.x, this.y, this.wD, this.wD);
       }
-    }
-    else if(state4 === "tank"){
-      image(dinoTank, this.x, this.y, this.wD + 20, this.wD);
-    }
+    // else if(state4 === "tank"){
+    //   image(dinoTank, this.x, this.y, this.wD + 20, this.wD);
+    // }
     
     
   }
@@ -234,6 +270,7 @@ function setup(){
   resetButton.onPress = changePress;
   resetButton.image = resetBottonImage;
   resetButton.fitImage = true; 
+  resetButton.resize(60,50);
   resetButton.text = " ";  
   resetButton.strokeWeight = 0;
 
@@ -286,11 +323,11 @@ function draw(){
     
     startScreen();
     startTime = int(millis()/100);
-    highScoreCount();
     howToPlayButton.draw();
   }
   else if(state1 === "playing"){
     // background(grassBackground);
+    
     state3 = "notOnPress";
     moveBackgroundCloads();
     moveBackground();
@@ -298,7 +335,6 @@ function draw(){
     
     howToPlayButton.draw();
     time();
-    // highScoreCount();
     displayScore();
     // let distance = random(110, 200);
     if(frameCount % 60 === 0){
@@ -347,8 +383,16 @@ function keyPressed(){
 }
 
 function startScreen(){
-  image(cloadsBackground, x1Cloads, 0, width, height);
-  image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
+  
+  if(stateDark === "light"){
+    image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
+    image(cloadsBackground, x1Cloads, 0, width, height);
+  }
+  else if(stateDark === "dark"){
+    image(darkModeGrassBackground, x1Grass, height - height/2, width, height - height/2);
+    image(darkCloadsBackground, x1Cloads, 0, width, height/2);
+  }
+  
 
   dino.display();
   // howToPlayButton.draw();
@@ -387,6 +431,7 @@ function resetGame (){
     //   let index = Cactai.indexOf(theCactai);
     //   Cactai.splice(index, 1);
     // }
+    startTime = int(millis()/100);
     Cactai = [];
     dino.resetDino();
     milliSecond = 0;
@@ -397,7 +442,7 @@ function changePress(){
   if(state1 === "dead"){
     state3 = "onPress";
   }
-  else if(state1 === "playing"){
+  else if(state1 === "playing" || state1 === "startScreen"){
     state1 = "howTo";
   }
   else if(state1 === "howTo"){
@@ -423,8 +468,14 @@ function displayHowTo(){
 }
 
 function moveBackground(){
-  image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
-  image(grassBackground, x2Grass, height - height/3.8, width, height - height/1.3);
+  if(stateDark === "light"){
+    image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
+    image(grassBackground, x2Grass, height - height/3.8, width, height - height/1.3);
+  }
+  else if(stateDark === "dark"){
+    image(darkModeGrassBackground, x1Grass, height - height/2, width, height - height/2);
+    image(darkModeGrassBackground, x2Grass, height - height/2, width, height - height/2);
+  }
   x1Grass -= scrollSpeed1;
   x2Grass -= scrollSpeed1;
   
@@ -437,8 +488,16 @@ function moveBackground(){
 }
 
 function moveBackgroundCloads(){
-  image(cloadsBackground, x1Cloads, 0, width, height);
-  image(cloadsBackground, x2Cloads, 0, width, height);
+  if(stateDark === "light"){
+    image(cloadsBackground, x1Cloads, 0, width, height);
+    image(cloadsBackground, x2Cloads, 0, width, height);
+  }
+  else if(stateDark === "dark"){
+    image(darkCloadsBackground, x1Cloads, 0, width, height/2);
+    image(darkCloadsBackground, x2Cloads, 0, width, height/2);
+  }
+  
+  
   x1Cloads -= scrollSpeed2;
   x2Cloads -= scrollSpeed2;
   
