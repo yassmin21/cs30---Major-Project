@@ -17,16 +17,20 @@ let darkDinoRight;
 let dinoJump;
 let darkDinoJump;
 let dinoDead;
+let darkDinoDead;
 let dinoTank;
 let grassBackground;
 let darkModeGrassBackground;
 let grassFullBackground;
 let cactusPicture;
+let darkCactus;
 let twoCactus;
+let twoDarkCactus;
 let moreCactus;
+let moreDarkCactus;
 let resetBottonImage;
 let gameOverImage;
-let button1;
+
 let jumpSound;
 let crashSound;
 let cloadsBackground;
@@ -61,6 +65,7 @@ function preload(){
   dinoJump = loadImage("running dino jump.png");
   darkDinoJump = loadImage("darkDinoJump.png");
   dinoDead = loadImage("dino dead.png");
+  darkDinoDead = loadImage("darkDeadDino.png");
   // dinoTank = loadImage("dinoTank.png");
   grassBackground = loadImage("background.png");
   darkModeGrassBackground = loadImage("darkModeGrass.png");
@@ -68,12 +73,14 @@ function preload(){
   darkCloadsBackground = loadImage("darkCloads.png");
   grassFullBackground = loadImage("backgroundfull.png");
   cactusPicture = loadImage("cactus.png");
+  darkCactus = loadImage("darkModeCactus.png");
   twoCactus = loadImage("two cactai.png");
+  twoDarkCactus = loadImage("2DarkCactai.png");
   moreCactus = loadImage("a lot of cactai.png");
+  moreDarkCactus = loadImage("3DarkCactai.png");
   resetBottonImage = loadImage("resetButton.png");
   gameOverImage = loadImage("gameover.png");
   font = loadFont("font.ttf");
-  button1 = loadImage("button1.png");
   jumpSound = loadSound("jump.wav");
   crashSound = loadSound("die.wav");
 }
@@ -111,7 +118,33 @@ class Dinosour{
 
   display(){
     // rect(this.x, this.y, this.w, this.w);
-      if(state1 === "startScreen"){
+    if(state1 === "startScreen"){
+      if(stateDark === "light"){
+        image(dinoJump, this.x, this.y, this.wD, this.wD);
+      }
+      else if(stateDark === "dark"){
+        image(darkDinoJump, this.x, this.y, this.wD, this.wD);
+      }
+    }
+
+    else if(state1 === "playing"){
+      if(state2 === "isLeftFoot"){
+        if(stateDark === "light"){
+          image(dinoleft, this.x, this.y, this.wD, this.wD);
+        }
+        else if(stateDark === "dark"){
+          image(darkDinoLeft, this.x, this.y, this.wD, this.wD);
+        }
+      }
+      else if(state2 === "isRightFoot"){
+        if(stateDark === "light"){
+          image(dinoRight, this.x, this.y, this.wD, this.wD);
+        }
+        else if(stateDark === "dark"){
+          image(darkDinoRight, this.x, this.y, this.wD, this.wD);
+        }
+      }
+      else if(state2 === "isDinoJump"){
         if(stateDark === "light"){
           image(dinoJump, this.x, this.y, this.wD, this.wD);
         }
@@ -119,44 +152,18 @@ class Dinosour{
           image(darkDinoJump, this.x, this.y, this.wD, this.wD);
         }
       }
-
-      else if(state1 === "playing"){
-        if(state2 === "isLeftFoot"){
-          if(stateDark === "light"){
-            image(dinoleft, this.x, this.y, this.wD, this.wD);
-          }
-          else if(stateDark === "dark"){
-            image(darkDinoLeft, this.x, this.y, this.wD, this.wD);
-          }
-        }
-        else if(state2 === "isRightFoot"){
-          if(stateDark === "light"){
-            image(dinoRight, this.x, this.y, this.wD, this.wD);
-          }
-          else if(stateDark === "dark"){
-            image(darkDinoRight, this.x, this.y, this.wD, this.wD);
-          }
-        }
-        else if(state2 === "isDinoJump"){
-          if(stateDark === "light"){
-            image(dinoJump, this.x, this.y, this.wD, this.wD);
-          }
-          else if(stateDark === "dark"){
-            image(darkDinoJump, this.x, this.y, this.wD, this.wD);
-          }
-        }
       
       
     }
     else if(state1 === "dead"){
-      // if(stateDark === "light"){
-      //   image(dinoRight, this.x, this.y, this.wD, this.wD);
-      // }
-      // else if(stateDark === "dark"){
-      //   image(darkDinoRight, this.x, this.y, this.wD, this.wD);
-      // }
+      if(stateDark === "light"){
         image(dinoDead, this.x, this.y, this.wD, this.wD);
       }
+      else if(stateDark === "dark"){
+        image(darkDinoDead, this.x, this.y, this.wD, this.wD);
+      }
+      
+    }
     // else if(state4 === "tank"){
     //   image(dinoTank, this.x, this.y, this.wD + 20, this.wD);
     // }
@@ -215,7 +222,11 @@ class Cactus{
     this.a = cactusPicture;
     this.b = twoCactus;
     this.c = moreCactus;
+    this.aDark = darkCactus;
+    this. bDark = twoDarkCactus;
+    this.cDark = moreDarkCactus;
     this.imageOfCactai = random([this.a, this.b, this.c]);
+    this.darkImageOfCactai = random([this.aDark, this.bDark, this.cDark]);
 
   }
 
@@ -238,7 +249,13 @@ class Cactus{
       this.w = width/8;
     }
     
-    image(this.imageOfCactai, this.x, this.y, this.w, this.h);
+    
+    if(stateDark === "light"){
+      image(this.imageOfCactai, this.x, this.y, this.w, this.h);
+    }
+    else if(stateDark === "dark"){
+      image(this.darkImageOfCactai, this.x, this.y, this.w, this.h);
+    }
     // image(cactusPicture, this.x, this.y, this.w, this.h);
   }
 
