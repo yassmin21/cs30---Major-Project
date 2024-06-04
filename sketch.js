@@ -6,8 +6,7 @@
 // - constrain
 
 
-// make it die if we hit cactus
-// highscore
+
 // make it look like the game score
 
 let dinoleft;
@@ -45,50 +44,66 @@ let choices;
 
 let hit;
 
-let highScore =0;
+let highScore = 0;
 
 let lastTimeSwitched = 0;
 let duration = 70;
 
 let state1 = "startScreen";
 let state2 = "isDinoJump";
+let state3 = "notOnPress";
+let stateDark = "light";
 
 let font;
-//state dead
-//92 97
 
-function preload(){
-  dinoleft = loadImage("running dino left.png");
-  darkDinoLeft = loadImage("dark running dino left.png");
-  dinoRight = loadImage("runing dino right.png");
-  darkDinoRight = loadImage("dark running dino right.png");
-  dinoJump = loadImage("running dino jump.png");
-  darkDinoJump = loadImage("darkDinoJump.png");
-  dinoDead = loadImage("dino dead.png");
-  darkDinoDead = loadImage("darkDeadDino.png");
-  // dinoTank = loadImage("dinoTank.png");
-  grassBackground = loadImage("background.png");
-  darkModeGrassBackground = loadImage("darkModeGrass.png");
-  cloadsBackground = loadImage("cloads.png");
-  darkCloadsBackground = loadImage("darkCloads.png");
-  grassFullBackground = loadImage("backgroundfull.png");
-  cactusPicture = loadImage("cactus.png");
-  darkCactus = loadImage("darkModeCactus.png");
-  twoCactus = loadImage("two cactai.png");
-  twoDarkCactus = loadImage("2DarkCactai.png");
-  moreCactus = loadImage("a lot of cactai.png");
-  moreDarkCactus = loadImage("3DarkCactai.png");
-  resetBottonImage = loadImage("resetButton.png");
-  gameOverImage = loadImage("gameover.png");
-  font = loadFont("font.ttf");
-  jumpSound = loadSound("jump.wav");
-  crashSound = loadSound("die.wav");
-}
+let dino;
+let cactais;
+
+let resetButton;
+let howToPlayButton;
+let existHowToPlay;
+let switchBetweenModes;
 
 let Cactai = [];
 let milliSecond;
 let startTime;
-let stateDark = "light";
+
+let x1Cloads = 0;
+let x2Cloads;
+let x1Grass = 0;
+let x2Grass;
+let scrollSpeed1 = 22;
+let scrollSpeed2 = 1;
+
+//state dead
+//92 97
+
+function preload(){
+  dinoleft = loadImage("assets/running dino left.png");
+  darkDinoLeft = loadImage("assets/dark running dino left.png");
+  dinoRight = loadImage("assets/runing dino right.png");
+  darkDinoRight = loadImage("assets/dark running dino right.png");
+  dinoJump = loadImage("assets/running dino jump.png");
+  darkDinoJump = loadImage("assets/darkDinoJump.png");
+  dinoDead = loadImage("assets/dino dead.png");
+  darkDinoDead = loadImage("assets/darkDeadDino.png");
+  grassBackground = loadImage("assets/background.png");
+  darkModeGrassBackground = loadImage("assets/darkModeGrass.png");
+  cloadsBackground = loadImage("assets/cloads.png");
+  darkCloadsBackground = loadImage("assets/darkCloads.png");
+  grassFullBackground = loadImage("assets/backgroundfull.png");
+  cactusPicture = loadImage("assets/cactus.png");
+  darkCactus = loadImage("assets/darkModeCactus.png");
+  twoCactus = loadImage("assets/two cactai.png");
+  twoDarkCactus = loadImage("assets/2DarkCactai.png");
+  moreCactus = loadImage("assets/a lot of cactai.png");
+  moreDarkCactus = loadImage("assets/3DarkCactai.png");
+  resetBottonImage = loadImage("assets/resetButton.png");
+  gameOverImage = loadImage("assets/gameover.png");
+  font = loadFont("font.ttf");
+  jumpSound = loadSound("assets/jump.wav");
+  crashSound = loadSound("assets/die.wav");
+}
 
 class Dinosour{
   constructor(x, y){
@@ -153,7 +168,6 @@ class Dinosour{
         }
       }
       
-      
     }
     else if(state1 === "dead"){
       if(stateDark === "light"){
@@ -164,10 +178,6 @@ class Dinosour{
       }
       
     }
-    // else if(state4 === "tank"){
-    //   image(dinoTank, this.x, this.y, this.wD + 20, this.wD);
-    // }
-    
     
   }
 
@@ -188,7 +198,6 @@ class Dinosour{
   }
   
   collision(Cactus){
-    
     //debugging
     // circle(this.x + this.w/2 - 10, this.y + this.w/2 - 10, this.w - 20);
     // rect(Cactus.x, Cactus.y, Cactus.w, Cactus.h);
@@ -218,7 +227,7 @@ class Cactus{
     //50
     this.w = width/ 20;
     //30
-    this.speed = 23;
+    this.speed = 22;
     this.a = cactusPicture;
     this.b = twoCactus;
     this.c = moreCactus;
@@ -238,25 +247,31 @@ class Cactus{
 
   display(){
     // rect(this.x, this.y, 10, this.w);
-    if(this.imageOfCactai === this.a){
-      this.w = width/20;
-    }
-    else if(this.imageOfCactai === this.b){
-      this.w = width/10;
-      this.h = height/6  + 8;
-    }
-    else if(this.imageOfCactai === this.c){
-      this.w = width/8;
-    }
-    
-    
     if(stateDark === "light"){
+      if(this.imageOfCactai === this.a){
+        this.w = width/20;
+      }
+      else if(this.imageOfCactai === this.b){
+       this.w = width/10;
+        this.h = height/6  + 8;
+      }
+      else if(this.imageOfCactai === this.c){
+        this.w = width/8;
+      }
       image(this.imageOfCactai, this.x, this.y, this.w, this.h);
     }
-    else if(stateDark === "dark"){
-      image(this.darkImageOfCactai, this.x, this.y, this.w, this.h);
+    else if(stateDark === "dark"){ 
+      if(this.darkImageOfCactai === this.aDark){
+        this.w = width/19;
+      }
+      else if(this.darkImageOfCactai === this.bDark){
+        this.w = width/13;
+      }
+      else if(this.darkImageOfCactai === this.cDark){
+        this.w = width/9;
+      }
+      image(this.darkImageOfCactai, this.x, this.y, this.w, this.h); 
     }
-    // image(cactusPicture, this.x, this.y, this.w, this.h);
   }
 
   disapeared(){
@@ -265,16 +280,6 @@ class Cactus{
   
 }
 
-let dino;
-let cactais;
-
-let resetButton;
-let state3 = "notOnPress";
-
-let howToPlayButton;
-
-let existHowToPlay;
-let switchBetweenModes;
 
 //600, 250
 function setup(){
@@ -285,7 +290,7 @@ function setup(){
   // eslint-disable-next-line no-undef
   resetButton = new Clickable();
   resetButton.locate(windowWidth/2 - 30, windowHeight/2);
-  resetButton.onPress = changePress;
+  resetButton.onPress = changePressGameOver;
   resetButton.image = resetBottonImage;
   resetButton.fitImage = true; 
   resetButton.resize(60,50);
@@ -296,7 +301,7 @@ function setup(){
   // eslint-disable-next-line no-undef
   howToPlayButton = new Clickable();
   howToPlayButton.locate(width - 90, 100);
-  howToPlayButton.onPress = changePress;
+  howToPlayButton.onPress = changePressHowTo;
   howToPlayButton.cornerRadius = 3;
   howToPlayButton.text = "i"; 
   howToPlayButton.textFont = font;
@@ -309,7 +314,7 @@ function setup(){
   // eslint-disable-next-line no-undef
   existHowToPlay = new Clickable();
   existHowToPlay.locate(width - 90, 50);
-  existHowToPlay.onPress = changePress;
+  existHowToPlay.onPress = changePressHowTo;
   existHowToPlay.cornerRadius = 3;
   existHowToPlay.text = "X"; 
   existHowToPlay.textFont = font;
@@ -321,7 +326,7 @@ function setup(){
 
   switchBetweenModes = new Clickable();
   switchBetweenModes.locate(width - 90, 200);
-  switchBetweenModes.onPress = changePress;
+  switchBetweenModes.onPress = changePressModes;
   switchBetweenModes.cornerRadius = 3;
   switchBetweenModes.text = "M"; 
   switchBetweenModes.textFont = font;
@@ -336,70 +341,52 @@ function setup(){
 }
 
 
-let x1Cloads = 0;
-let x2Cloads;
-let x1Grass = 0;
-let x2Grass;
-let scrollSpeed1 = 23;
-let scrollSpeed2 = 3;
 
 function draw(){
   highScoreCount();
   displayScore();
- 
-  // changeColourIfHover();
   if(state1 === "startScreen"){
-    
     startScreen();
     startTime = int(millis()/100);
-    howToPlayButton.draw();
-    switchBetweenModes.draw();
   }
   else if(state1 === "playing"){
-    // background(grassBackground);
-    
     state3 = "notOnPress";
     moveBackgroundCloads();
     moveBackground();
-    
-    
     howToPlayButton.draw();
     switchBetweenModes.draw();
     time();
     displayScore();
-    // let distance = random(110, 200);
-    if(frameCount % 60 === 0){
-      cactais = new Cactus(this.x, this.y, this.imageOfCactai);
-      Cactai.push(cactais);
-    }
-  
-
-    for(let theCactai of Cactai){
-      if(theCactai.disapeared()){
-        // let index = Cactai.indexOf(theCactai);
-        // Cactai.splice(index, 3);
-        Cactai = [];
-      }
-      else{
-        theCactai.move();
-        dino.collision(theCactai);
-        theCactai.display();
-      }
-    }
+    displayCactai();
     dino.display();
     dino.switchBetweenDinos();
     dino.run();
-    
   }
   else if(state1 === "dead"){
-    howToPlayButton.draw();
-    switchBetweenModes.draw();
     resetGame();
     displayGameOver();
+    
   }
   else if(state1 === "howTo"){
     displayHowTo();
   }
+}
+
+function displayCactai(){
+  for(let theCactai of Cactai){
+    if(theCactai.disapeared()){
+      Cactai = [];
+    }
+    else{
+      theCactai.move();
+      dino.collision(theCactai);
+      theCactai.display();
+    }
+  }
+  if(frameCount % 60 === 0){
+      cactais = new Cactus(this.x, this.y, this.imageOfCactai);
+      Cactai.push(cactais);
+    }
 }
 
 function keyPressed(){
@@ -424,10 +411,10 @@ function startScreen(){
     image(darkModeGrassBackground, x1Grass, height - height/2, width, height - height/2);
     image(darkCloadsBackground, x1Cloads, 0, width, height/2);
   }
-  
+  howToPlayButton.draw();
+  switchBetweenModes.draw();
 
   dino.display();
-  // howToPlayButton.draw();
 }
 //change to part only of image
 
@@ -441,7 +428,7 @@ function time(){
 }
 
 function highScoreCount(){
-  if( milliSecond > highScore){
+  if(milliSecond > highScore){
     highScore = milliSecond;
   }
 }
@@ -465,17 +452,16 @@ function resetGame (){
   }
 }
 
-function changePress(){
-  // if(state1 === "dead"){
-  //   state3 = "onPress";
-  // }
-  if(state1 === "startScreen" ){
+function changePressHowTo(){
+  if(state1 === "startScreen" || state1 === "dead"){
     state1 = "howTo";
   }
   else if(state1 === "howTo"){
     state1 = "startScreen";
   }
-  // stateDark = "dark";
+}
+
+function changePressModes(){
   if(stateDark === "light"){
     stateDark = "dark";
   }
@@ -484,14 +470,21 @@ function changePress(){
   }
 }
 
+function changePressGameOver(){
+  if(state1 === "dead"){
+    state3 = "onPress";
+  }
+}
+
 function displayGameOver(){
   displayHighScore();
   resetButton.draw();
+  howToPlayButton.draw();
+  switchBetweenModes.draw();
   image(gameOverImage, width/3.8, height/4, width/2, height/18);
 }
 
 function displayHowTo(){
-  
   background(grassFullBackground);
   existHowToPlay.draw();
   text("press space to jump", width/2 - 300, 170);
