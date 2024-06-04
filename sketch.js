@@ -88,7 +88,7 @@ function preload(){
 let Cactai = [];
 let milliSecond;
 let startTime;
-let stateDark = "dark";
+let stateDark = "light";
 
 class Dinosour{
   constructor(x, y){
@@ -274,6 +274,7 @@ let state3 = "notOnPress";
 let howToPlayButton;
 
 let existHowToPlay;
+let switchBetweenModes;
 
 //600, 250
 function setup(){
@@ -318,11 +319,22 @@ function setup(){
   existHowToPlay.textColor = "grey"; 
   existHowToPlay.stroke = "grey";  
 
+  switchBetweenModes = new Clickable();
+  switchBetweenModes.locate(width - 90, 200);
+  switchBetweenModes.onPress = changePress;
+  switchBetweenModes.cornerRadius = 3;
+  switchBetweenModes.text = "M"; 
+  switchBetweenModes.textFont = font;
+  switchBetweenModes.strokeWeight = 3;
+  switchBetweenModes.textSize = 30;  
+  switchBetweenModes.resize(50, 50);
+  switchBetweenModes.textColor = "grey"; 
+  switchBetweenModes.stroke = "grey";  
+
   x2Cloads = width;
-  x2Grass = width;
+  x2Grass = width + 9;
 }
 
-// let colour ;
 
 let x1Cloads = 0;
 let x2Cloads;
@@ -341,6 +353,7 @@ function draw(){
     startScreen();
     startTime = int(millis()/100);
     howToPlayButton.draw();
+    switchBetweenModes.draw();
   }
   else if(state1 === "playing"){
     // background(grassBackground);
@@ -351,6 +364,7 @@ function draw(){
     
     
     howToPlayButton.draw();
+    switchBetweenModes.draw();
     time();
     displayScore();
     // let distance = random(110, 200);
@@ -379,6 +393,7 @@ function draw(){
   }
   else if(state1 === "dead"){
     howToPlayButton.draw();
+    switchBetweenModes.draw();
     resetGame();
     displayGameOver();
   }
@@ -403,7 +418,7 @@ function startScreen(){
   
   if(stateDark === "light"){
     image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
-    image(cloadsBackground, x1Cloads, 0, width, height);
+    image(cloadsBackground, x1Cloads, 0, width, height - height/8);
   }
   else if(stateDark === "dark"){
     image(darkModeGrassBackground, x1Grass, height - height/2, width, height - height/2);
@@ -443,11 +458,6 @@ function displayHighScore(){
 function resetGame (){
   if (state1 === "dead" && state3  === "onPress") {
     state1 = "playing";
-    //removes cactus
-    // for(let theCactai of Cactai){
-    //   let index = Cactai.indexOf(theCactai);
-    //   Cactai.splice(index, 1);
-    // }
     startTime = int(millis()/100);
     Cactai = [];
     dino.resetDino();
@@ -456,14 +466,21 @@ function resetGame (){
 }
 
 function changePress(){
-  if(state1 === "dead"){
-    state3 = "onPress";
-  }
-  else if(state1 === "playing" || state1 === "startScreen"){
+  // if(state1 === "dead"){
+  //   state3 = "onPress";
+  // }
+  if(state1 === "startScreen" ){
     state1 = "howTo";
   }
   else if(state1 === "howTo"){
     state1 = "startScreen";
+  }
+  // stateDark = "dark";
+  if(stateDark === "light"){
+    stateDark = "dark";
+  }
+  else if(stateDark === "dark" ){
+    stateDark = "light";
   }
 }
 
