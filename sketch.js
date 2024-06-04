@@ -252,7 +252,7 @@ class Cactus{
         this.w = width/20;
       }
       else if(this.imageOfCactai === this.b){
-       this.w = width/10;
+        this.w = width/10;
         this.h = height/6  + 8;
       }
       else if(this.imageOfCactai === this.c){
@@ -314,7 +314,7 @@ function setup(){
   // eslint-disable-next-line no-undef
   existHowToPlay = new Clickable();
   existHowToPlay.locate(width - 90, 50);
-  existHowToPlay.onPress = changePressHowTo;
+  existHowToPlay.onPress = changePressHowTo2;
   existHowToPlay.cornerRadius = 3;
   existHowToPlay.text = "X"; 
   existHowToPlay.textFont = font;
@@ -323,7 +323,8 @@ function setup(){
   existHowToPlay.resize(50, 50);
   existHowToPlay.textColor = "grey"; 
   existHowToPlay.stroke = "grey";  
-
+  
+  // eslint-disable-next-line no-undef
   switchBetweenModes = new Clickable();
   switchBetweenModes.locate(width - 90, 200);
   switchBetweenModes.onPress = changePressModes;
@@ -337,7 +338,7 @@ function setup(){
   switchBetweenModes.stroke = "grey";  
 
   x2Cloads = width;
-  x2Grass = width + 9;
+  x2Grass = width;
 }
 
 
@@ -384,9 +385,9 @@ function displayCactai(){
     }
   }
   if(frameCount % 60 === 0){
-      cactais = new Cactus(this.x, this.y, this.imageOfCactai);
-      Cactai.push(cactais);
-    }
+    cactais = new Cactus(this.x, this.y, this.imageOfCactai);
+    Cactai.push(cactais);
+  }
 }
 
 function keyPressed(){
@@ -451,12 +452,28 @@ function resetGame (){
     milliSecond = 0;
   }
 }
-
+let stateChangeStart = "blabla";
 function changePressHowTo(){
-  if(state1 === "startScreen" || state1 === "dead"){
+  if(state1 === "startScreen"){
     state1 = "howTo";
+    stateChangeStart = "true";
   }
-  else if(state1 === "howTo"){
+  else if(state1 === "dead"){
+    state1 = "howTo";
+    stateChangeStart = "false";
+  }
+  
+}
+
+function changePressHowTo2(){
+  if(state1 === "howTo" && stateChangeStart === "false"){
+    // x1Cloads = 0;
+    // x1Grass = 0;
+    state1 = "dead";
+    state3 = "onPress";
+    
+  }
+  else if(state1 === "howTo" && stateChangeStart === "true"){
     state1 = "startScreen";
   }
 }
