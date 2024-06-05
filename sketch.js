@@ -28,6 +28,8 @@ let twoDarkCactus;
 let moreCactus;
 let moreDarkCactus;
 let resetBottonImage;
+let darkModeButtonImage;
+let lightModeButtonImage;
 let gameOverImage;
 let jumpSound;
 let crashSound;
@@ -99,6 +101,8 @@ function preload(){
   moreCactus = loadImage("assets/a lot of cactai.png");
   moreDarkCactus = loadImage("assets/3DarkCactai.png");
   resetBottonImage = loadImage("assets/resetButton.png");
+  darkModeButtonImage = loadImage("assets/darkModeButton.png");
+  lightModeButtonImage = loadImage("assets/lightModeButton.png");
   gameOverImage = loadImage("assets/gameover.png");
   font = loadFont("font.ttf");
   jumpSound = loadSound("assets/jump.wav");
@@ -285,7 +289,13 @@ class Cactus{
 //600, 250
 function setup(){
   createCanvas(windowWidth, windowHeight);
-  fill("grey");
+  // if(stateDark === "light"){
+  //   fill("grey");
+  // }
+  // else if(stateDark === "dark"){
+  //   fill("white");
+  // }
+  
   dino = new Dinosour(this.x, this.y);
   textSize(30);
   // eslint-disable-next-line no-undef
@@ -309,8 +319,9 @@ function setup(){
   howToPlayButton.strokeWeight = 3;
   howToPlayButton.textSize = 30;  
   howToPlayButton.resize(50, 50);
-  howToPlayButton.textColor = "grey"; 
-  howToPlayButton.stroke = "grey";  
+  howToPlayButton.textColor = colourSwitch; 
+  howToPlayButton.stroke = colourSwitch; 
+  howToPlayButton.color = "black";
 
   // eslint-disable-next-line no-undef
   existHowToPlay = new Clickable();
@@ -324,29 +335,57 @@ function setup(){
   existHowToPlay.resize(50, 50);
   existHowToPlay.textColor = "grey"; 
   existHowToPlay.stroke = "grey";  
-  
+
+  switchBetweenModesImages();
   // eslint-disable-next-line no-undef
   switchBetweenModes = new Clickable();
   switchBetweenModes.locate(width - 90, 200);
   switchBetweenModes.onPress = changePressModes;
+  switchBetweenModes.image = imageSwitch;
   switchBetweenModes.cornerRadius = 3;
-  switchBetweenModes.text = "M"; 
+  switchBetweenModes.text = " "; 
   switchBetweenModes.textFont = font;
   switchBetweenModes.strokeWeight = 3;
   switchBetweenModes.textSize = 30;  
   switchBetweenModes.resize(50, 50);
   switchBetweenModes.textColor = "grey"; 
-  switchBetweenModes.stroke = "grey";  
+  switchBetweenModes.stroke = strokeSwitch;  
 
   x2Cloads = width;
   x2Grass = width;
 }
 
+let imageSwitch;
+let  strokeSwitch;
+let colourSwitch;
 
+function switchBetweenModesImages(){
+  if(stateDark === "light"){
+    imageSwitch = lightModeButtonImage;
+    strokeSwitch = "white";
+    colourSwitch = "grey";
+  }
+  else if(stateDark === "dark"){
+    imageSwitch = darkModeButtonImage;
+    strokeSwitch = "black";
+    colourSwitch = "white";
+  }
+}
 
 function draw(){
   highScoreCount();
   displayScore();
+  switchBetweenModesImages();
+  switchBetweenModes.image = imageSwitch;
+  switchBetweenModes.stroke = strokeSwitch; 
+  howToPlayButton.textColor = colourSwitch; 
+  howToPlayButton.stroke = colourSwitch;  
+  if(stateDark === "light"){
+    fill("grey");
+  }
+  else if(stateDark === "dark"){
+    fill("white");
+  }
   if(state1 === "startScreen"){
     startScreen();
     startTime = int(millis()/100);
