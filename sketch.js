@@ -29,9 +29,9 @@ let moreCactus;
 let moreDarkCactus;
 let resetBottonImage;
 let gameOverImage;
-
 let jumpSound;
 let crashSound;
+let pointSound;
 let cloadsBackground;
 let darkCloadsBackground;
 
@@ -103,6 +103,7 @@ function preload(){
   font = loadFont("font.ttf");
   jumpSound = loadSound("assets/jump.wav");
   crashSound = loadSound("assets/die.wav");
+  pointSound = loadSound("assets/point.wav");
 }
 
 class Dinosour{
@@ -358,6 +359,9 @@ function draw(){
     switchBetweenModes.draw();
     time();
     displayScore();
+    // if(highScore> 0){
+    //   displayHighScore();
+    // }
     displayCactai();
     dino.display();
     dino.switchBetweenDinos();
@@ -428,19 +432,67 @@ function time(){
   // text(highScore, width - 150, 60);
 }
 
+let displayHighScoreNumber = 0;
 function highScoreCount(){
   if(milliSecond > highScore){
     highScore = milliSecond;
+    
   }
+  displayHighScoreNumber = highScore;
 }
 
 function displayScore(){
-  text(milliSecond, width - 100, 60);
+  if(milliSecond< 10){
+    text("0000" + milliSecond, width - 200, 60);
+  }
+  else if(milliSecond>= 10 && milliSecond < 100){
+    text("000" + milliSecond, width - 200, 60);
+  }
+  else if(milliSecond>= 100 && milliSecond < 1000){
+    if (milliSecond === 100) {
+      sound();
+    }
+    text("00" + milliSecond, width - 200, 60);
+  }
+  else if(milliSecond>= 1000 && milliSecond < 10000){
+    if (milliSecond === 1000) {
+      sound();
+    }
+    text("0" + milliSecond, width - 200, 60);
+  }
+  else if(milliSecond>= 10000 && milliSecond < 100000){
+    if (milliSecond === 10000) {
+      sound();
+    }
+    text( milliSecond, width - 200, 60);
+  }
   
 }
 
+function sound(){
+  if (!pointSound.isPlaying()) {
+    pointSound.play();
+  }
+}
+
 function displayHighScore(){
-  text(highScore, width - 230, 60);
+  // text(highScore, width - 500 , 60);
+  if(highScore< 10){
+    text("HI " + "0000" + displayHighScoreNumber, width - 480, 60);
+  }
+  else if(highScore>= 10 && highScore <= 100){
+    text("HI " + "000" + displayHighScoreNumber, width - 480, 60);
+  }
+  else if(highScore>= 100 && highScore <= 1000){
+    text("HI " + "00" + displayHighScoreNumber, width - 480, 60);
+  }
+  else if(highScore>= 1000 && highScore <= 10000){
+    text("HI " + "0" + displayHighScoreNumber, width - 480, 60);
+  }
+  else if(highScore>= 10000 && highScore <= 100000){
+    text("HI " + displayHighScoreNumber, width - 480, 60);
+  }
+  
 }
 
 function resetGame (){
