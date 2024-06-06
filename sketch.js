@@ -31,6 +31,7 @@ let resetBottonImage;
 let darkModeButtonImage;
 let lightModeButtonImage;
 let gameOverImage;
+let darkGameOverImage;
 let jumpSound;
 let crashSound;
 let pointSound;
@@ -74,7 +75,7 @@ let x1Cloads = 0;
 let x2Cloads;
 let x1Grass = 0;
 let x2Grass;
-let scrollSpeed1 = 22;
+let scrollSpeed1 = 18;
 let scrollSpeed2 = 1;
 
 //state dead
@@ -104,27 +105,29 @@ function preload(){
   darkModeButtonImage = loadImage("assets/darkModeButton.png");
   lightModeButtonImage = loadImage("assets/lightModeButton.png");
   gameOverImage = loadImage("assets/gameover.png");
+  darkGameOverImage = loadImage("assets/darkGameOver.png");
   font = loadFont("font.ttf");
   jumpSound = loadSound("assets/jump.wav");
   crashSound = loadSound("assets/die.wav");
   pointSound = loadSound("assets/point.wav");
+  video = createVideo('assets/rickRollVideo.mp4');
 }
 
 class Dinosour{
   constructor(x, y){
     this.x = 60;
-    this.y = height - height/4.3;
-    this.wD = height/7;
+    this.y = height - height/3.9;
+    this.wD = height/5.8;
     this.wB = height/4;
     this.hD = this.wD;
-    this.gravity = 5;
+    this.gravity = 4;
     this.velocity = 0;
 
   }
 
   jump(){
-    if(this.y === height - height/4.3){
-      this.velocity = -55;
+    if(this.y === height - height/3.9){
+      this.velocity = -48;
       jumpSound.play();
     }
       
@@ -133,7 +136,7 @@ class Dinosour{
   run(){
     this.y += this.velocity;
     this.velocity += this.gravity;
-    this.y = constrain(this.y, height/20, height - height/4.3);
+    this.y = constrain(this.y, height/20, height - height/3.9);
   }
 
   display(){
@@ -232,7 +235,7 @@ class Cactus{
     //50
     this.w = width/ 20;
     //30
-    this.speed = 22;
+    this.speed = 18;
     this.a = cactusPicture;
     this.b = twoCactus;
     this.c = moreCactus;
@@ -285,58 +288,24 @@ class Cactus{
   
 }
 
-
+let video;
 //600, 250
 function setup(){
   createCanvas(windowWidth, windowHeight);
-  // if(stateDark === "light"){
-  //   fill("grey");
-  // }
-  // else if(stateDark === "dark"){
-  //   fill("white");
-  // }
-  
   dino = new Dinosour(this.x, this.y);
   textSize(30);
-  // eslint-disable-next-line no-undef
-  resetButton = new Clickable();
-  resetButton.locate(windowWidth/2 - 30, windowHeight/2);
-  resetButton.onPress = changePressGameOver;
-  resetButton.image = resetBottonImage;
-  resetButton.fitImage = true; 
-  resetButton.resize(60,50);
-  resetButton.text = " ";  
-  resetButton.strokeWeight = 0;
-
   textFont(font);
-  // eslint-disable-next-line no-undef
-  howToPlayButton = new Clickable();
-  howToPlayButton.locate(width - 90, 100);
-  howToPlayButton.onPress = changePressHowTo;
-  howToPlayButton.cornerRadius = 3;
-  howToPlayButton.text = "i"; 
-  howToPlayButton.textFont = font;
-  howToPlayButton.strokeWeight = 3;
-  howToPlayButton.textSize = 30;  
-  howToPlayButton.resize(50, 50);
-  howToPlayButton.textColor = colourSwitch; 
-  howToPlayButton.stroke = colourSwitch; 
-  howToPlayButton.color = "black";
+  video.hide();
+  resetButtonFunction();
+  howToPlayButtonFunction();
+  existHowToPlayFunction();
+  switchBetweenModesFunction();
+  
+  x2Cloads = width;
+  x2Grass = width;
+}
 
-  // eslint-disable-next-line no-undef
-  existHowToPlay = new Clickable();
-  existHowToPlay.locate(width - 90, 50);
-  existHowToPlay.onPress = changePressHowTo2;
-  existHowToPlay.cornerRadius = 3;
-  existHowToPlay.text = "X"; 
-  existHowToPlay.textFont = font;
-  existHowToPlay.strokeWeight = 3;
-  existHowToPlay.textSize = 30;  
-  existHowToPlay.resize(50, 50);
-  existHowToPlay.textColor = "grey"; 
-  existHowToPlay.stroke = "grey";  
-
-  switchBetweenModesImages();
+function switchBetweenModesFunction(){
   // eslint-disable-next-line no-undef
   switchBetweenModes = new Clickable();
   switchBetweenModes.locate(width - 90, 200);
@@ -350,42 +319,86 @@ function setup(){
   switchBetweenModes.resize(50, 50);
   switchBetweenModes.textColor = "grey"; 
   switchBetweenModes.stroke = strokeSwitch;  
+}
 
-  x2Cloads = width;
-  x2Grass = width;
+function existHowToPlayFunction(){
+  // eslint-disable-next-line no-undef
+  existHowToPlay = new Clickable();
+  existHowToPlay.locate(width - 90, 50);
+  existHowToPlay.onPress = changePressHowTo2;
+  existHowToPlay.cornerRadius = 3;
+  existHowToPlay.text = "X"; 
+  existHowToPlay.textFont = font;
+  existHowToPlay.strokeWeight = 3;
+  existHowToPlay.textSize = 30;  
+  existHowToPlay.resize(50, 50);
+  existHowToPlay.textColor = "grey"; 
+  existHowToPlay.stroke = "grey";  
+}
+
+function howToPlayButtonFunction(){
+  // eslint-disable-next-line no-undef
+  howToPlayButton = new Clickable();
+  howToPlayButton.locate(width - 90, 100);
+  howToPlayButton.onPress = changePressHowTo;
+  howToPlayButton.cornerRadius = 3;
+  howToPlayButton.text = "i"; 
+  howToPlayButton.textFont = font;
+  howToPlayButton.strokeWeight = 3;
+  howToPlayButton.textSize = 30;  
+  howToPlayButton.resize(50, 50);
+  howToPlayButton.textColor = colourSwitch; 
+  howToPlayButton.stroke = strokeSwitch; 
+  howToPlayButton.color = fillSwitch;
+}
+
+function resetButtonFunction(){
+  // eslint-disable-next-line no-undef
+  resetButton = new Clickable();
+  resetButton.locate(windowWidth/2 - 30, windowHeight/2);
+  resetButton.onPress = changePressGameOver;
+  resetButton.image = resetBottonImage;
+  resetButton.fitImage = true; 
+  resetButton.resize(60,50);
+  resetButton.text = " ";  
+  resetButton.strokeWeight = 0;
 }
 
 let imageSwitch;
-let  strokeSwitch;
+let strokeSwitch;
 let colourSwitch;
+let fillSwitch;
 
 function switchBetweenModesImages(){
   if(stateDark === "light"){
+    fill("grey");
     imageSwitch = lightModeButtonImage;
     strokeSwitch = "white";
-    colourSwitch = "grey";
-  }
-  else if(stateDark === "dark"){
-    imageSwitch = darkModeButtonImage;
-    strokeSwitch = "black";
-    colourSwitch = "white";
-  }
-}
-
-function draw(){
-  highScoreCount();
-  displayScore();
-  switchBetweenModesImages();
-  switchBetweenModes.image = imageSwitch;
-  switchBetweenModes.stroke = strokeSwitch; 
-  howToPlayButton.textColor = colourSwitch; 
-  howToPlayButton.stroke = colourSwitch;  
-  if(stateDark === "light"){
-    fill("grey");
+    colourSwitch = "black";
+    fillSwitch = "white";
   }
   else if(stateDark === "dark"){
     fill("white");
+    imageSwitch = darkModeButtonImage;
+    strokeSwitch = "black";
+    colourSwitch = "white";
+    fillSwitch = "black";
   }
+  switchBetweenModes.image = imageSwitch;
+  switchBetweenModes.stroke = strokeSwitch; 
+  howToPlayButton.textColor = colourSwitch; 
+  howToPlayButton.stroke = strokeSwitch;  
+  howToPlayButton.color = fillSwitch;
+}
+
+function draw(){
+  
+  highScoreCount();
+  displayScore();
+  sound();
+  switchBetweenModesImages();
+  
+
   if(state1 === "startScreen"){
     startScreen();
     startTime = int(millis()/100);
@@ -398,9 +411,6 @@ function draw(){
     switchBetweenModes.draw();
     time();
     displayScore();
-    // if(highScore> 0){
-    //   displayHighScore();
-    // }
     displayCactai();
     dino.display();
     dino.switchBetweenDinos();
@@ -414,7 +424,19 @@ function draw(){
   else if(state1 === "howTo"){
     displayHowTo();
   }
+  easterEgg();
 }
+let playing = true;
+
+// function mousePressed() {
+//   if (playing) {
+//     video.pause();
+//   }
+//    else {
+//      video.play();
+//    }
+//    playing = !playing;
+//  }
 
 function displayCactai(){
   for(let theCactai of Cactai){
@@ -427,7 +449,7 @@ function displayCactai(){
       theCactai.display();
     }
   }
-  if(frameCount % 60 === 0){
+  if(frameCount % 80 === 0){
     cactais = new Cactus(this.x, this.y, this.imageOfCactai);
     Cactai.push(cactais);
   }
@@ -467,8 +489,6 @@ function time(){
   if (milliSecond > 0){
     milliSecond = milliSecond - startTime; //minus the millis from total from millis of start screen
   }
-  // text(milliSecond, width - 70, 60);
-  // text(highScore, width - 150, 60);
 }
 
 let displayHighScoreNumber = 0;
@@ -481,41 +501,61 @@ function highScoreCount(){
 }
 
 function displayScore(){
+  
   if(milliSecond< 10){
     text("0000" + milliSecond, width - 200, 60);
   }
   else if(milliSecond>= 10 && milliSecond < 100){
+    
     text("000" + milliSecond, width - 200, 60);
   }
   else if(milliSecond>= 100 && milliSecond < 1000){
-    if (milliSecond === 100) {
-      sound();
-    }
     text("00" + milliSecond, width - 200, 60);
   }
   else if(milliSecond>= 1000 && milliSecond < 10000){
-    if (milliSecond === 1000) {
-      sound();
-    }
     text("0" + milliSecond, width - 200, 60);
   }
   else if(milliSecond>= 10000 && milliSecond < 100000){
-    if (milliSecond === 10000) {
-      sound();
-    }
     text( milliSecond, width - 200, 60);
   }
   
 }
 
-function sound(){
-  if (!pointSound.isPlaying()) {
-    pointSound.play();
+let alreadyPlayed = "notYet";
+function easterEgg(){
+  if(milliSecond >= 20 && alreadyPlayed === "notYet"){
+      
+      let completion = video.time()/video.duration();
+      video.play();
+      let img = video.get();
+      image(img, 0, 0); 
+      video.size(width, height);
+      video.showControls();
+      
+
+      
+      if( completion === 100){
+        
+        alreadyPlayed = "Yet";
+        
+
+      }  
+  }
+  else if(milliSecond>= 20 && alreadyPlayed === "Yet"){
+    video.pause();
   }
 }
 
+function sound(){
+  if(milliSecond % 100 === 0 && milliSecond !== 0){
+     if (!pointSound.isPlaying()) {
+      pointSound.play();
+    }
+  }
+ 
+}
+
 function displayHighScore(){
-  // text(highScore, width - 500 , 60);
   if(highScore< 10){
     text("HI " + "0000" + displayHighScoreNumber, width - 480, 60);
   }
@@ -543,6 +583,7 @@ function resetGame (){
     milliSecond = 0;
   }
 }
+
 let stateChangeStart = "blabla";
 function changePressHowTo(){
   if(state1 === "startScreen"){
@@ -558,8 +599,6 @@ function changePressHowTo(){
 
 function changePressHowTo2(){
   if(state1 === "howTo" && stateChangeStart === "false"){
-    // x1Cloads = 0;
-    // x1Grass = 0;
     state1 = "dead";
     state3 = "onPress";
     
@@ -589,7 +628,13 @@ function displayGameOver(){
   resetButton.draw();
   howToPlayButton.draw();
   switchBetweenModes.draw();
-  image(gameOverImage, width/3.8, height/4, width/2, height/18);
+  if(stateDark === "light"){
+    image(gameOverImage, width/3.8, height/4, width/2, height/18);
+  }
+  else if(stateDark === "dark"){
+    image(darkGameOverImage, width/3.8, height/4, width/2, height/10);
+  }
+  
 }
 
 function displayHowTo(){
