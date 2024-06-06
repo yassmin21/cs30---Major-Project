@@ -6,6 +6,7 @@
 // - constrain
 
 
+//535353 HEX COLOUR
 
 // make it look like the game score
 
@@ -110,7 +111,7 @@ function preload(){
   jumpSound = loadSound("assets/jump.wav");
   crashSound = loadSound("assets/die.wav");
   pointSound = loadSound("assets/point.wav");
-  video = createVideo('assets/rickRollVideo.mp4');
+  video = createVideo("assets/rickRollVideo.mp4");
 }
 
 class Dinosour{
@@ -248,6 +249,14 @@ class Cactus{
   }
 
   //add more cactus pics
+
+  makeSpeedHigher(){
+    this.speed = scrollSpeed1;
+    if(milliSecond % 20 === 0 && scrollSpeed1 < 30){
+      
+      scrollSpeed1 += 0.1;
+    }
+  }
 
   move(){
     this.x -= this.speed;
@@ -424,19 +433,11 @@ function draw(){
   else if(state1 === "howTo"){
     displayHowTo();
   }
-  easterEgg();
+  // easterEgg();
 }
 let playing = true;
 
-// function mousePressed() {
-//   if (playing) {
-//     video.pause();
-//   }
-//    else {
-//      video.play();
-//    }
-//    playing = !playing;
-//  }
+
 
 function displayCactai(){
   for(let theCactai of Cactai){
@@ -444,9 +445,11 @@ function displayCactai(){
       Cactai = [];
     }
     else{
+      theCactai.makeSpeedHigher();
       theCactai.move();
       dino.collision(theCactai);
       theCactai.display();
+      
     }
   }
   if(frameCount % 80 === 0){
@@ -472,6 +475,7 @@ function startScreen(){
   if(stateDark === "light"){
     image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
     image(cloadsBackground, x1Cloads, 0, width, height - height/8);
+    text("press space to start", width/3.2, height/3);
   }
   else if(stateDark === "dark"){
     image(darkModeGrassBackground, x1Grass, height - height/2, width, height - height/2);
@@ -525,21 +529,21 @@ let alreadyPlayed = "notYet";
 function easterEgg(){
   if(milliSecond >= 20 && alreadyPlayed === "notYet"){
       
-      let completion = video.time()/video.duration();
-      video.play();
-      let img = video.get();
-      image(img, 0, 0); 
-      video.size(width, height);
-      video.showControls();
+    let completion = video.time()/video.duration();
+    video.play();
+    let img = video.get();
+    image(img, 0, 0); 
+    video.size(width, height);
+    video.showControls();
       
 
       
-      if( completion === 100){
+    if( completion === 100){
         
-        alreadyPlayed = "Yet";
+      alreadyPlayed = "Yet";
         
 
-      }  
+    }  
   }
   else if(milliSecond>= 20 && alreadyPlayed === "Yet"){
     video.pause();
@@ -548,7 +552,7 @@ function easterEgg(){
 
 function sound(){
   if(milliSecond % 100 === 0 && milliSecond !== 0){
-     if (!pointSound.isPlaying()) {
+    if (!pointSound.isPlaying()) {
       pointSound.play();
     }
   }
@@ -581,6 +585,7 @@ function resetGame (){
     Cactai = [];
     dino.resetDino();
     milliSecond = 0;
+    scrollSpeed1 = 18;
   }
 }
 
