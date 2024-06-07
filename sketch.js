@@ -128,7 +128,7 @@ class Dinosour{
 
   jump(){
     if(this.y === height - height/3.9){
-      this.velocity = -48;
+      this.velocity = -50;
       jumpSound.play();
     }
       
@@ -252,7 +252,7 @@ class Cactus{
 
   makeSpeedHigher(){
     this.speed = scrollSpeed1;
-    if(milliSecond % 20 === 0 && scrollSpeed1 < 30){
+    if(milliSecond % 40 === 0 && scrollSpeed1 < 30){
       
       scrollSpeed1 += 0.1;
     }
@@ -664,10 +664,11 @@ function moveBackground(){
   x1Grass -= scrollSpeed1;
   x2Grass -= scrollSpeed1;
   
-  if (x1Grass < -width){
+
+  if (x1Grass < -width ){
     x1Grass = width;
   }
-  if (x2Grass < -width){
+  if (x2Grass < -width ){
     x2Grass = width;
   }
 }
