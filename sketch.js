@@ -401,7 +401,7 @@ function switchBetweenModesImages(){
 }
 
 function draw(){
-  
+  background("white");
   highScoreCount();
   displayScore();
   sound();
@@ -474,7 +474,7 @@ function startScreen(){
   
   if(stateDark === "light"){
     image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
-    image(cloadsBackground, x1Cloads, 0, width, height - height/8);
+    image(cloadsBackground, x1Cloads, 0, width, height/2);
     text("press space to start", width/3.2, height/3);
   }
   else if(stateDark === "dark"){
@@ -658,10 +658,11 @@ function moveBackground(){
     image(grassBackground, x2Grass, height - height/3.8, width, height - height/1.3);
   }
   else if(stateDark === "dark"){
+    background("black");
     image(darkModeGrassBackground, x1Grass, height - height/2, width, height - height/2);
     image(darkModeGrassBackground, x2Grass, height - height/2, width, height - height/2);
   }
-  x1Grass -= scrollSpeed1;
+  x1Grass  -= scrollSpeed1 ;
   x2Grass -= scrollSpeed1;
   
 
@@ -675,8 +676,8 @@ function moveBackground(){
 
 function moveBackgroundCloads(){
   if(stateDark === "light"){
-    image(cloadsBackground, x1Cloads, 0, width, height);
-    image(cloadsBackground, x2Cloads, 0, width, height);
+    image(cloadsBackground, x1Cloads, 0, width, height/2);
+    image(cloadsBackground, x2Cloads, 0, width, height/2);
   }
   else if(stateDark === "dark"){
     image(darkCloadsBackground, x1Cloads, 0, width, height/2);
