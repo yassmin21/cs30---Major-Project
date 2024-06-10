@@ -15,13 +15,13 @@ let darkDinoLeft;
 let dinoRight;
 let darkDinoRight;
 let dinoJump;
+let dinoBlickingLight;
 let darkDinoJump;
 let dinoDead;
 let darkDinoDead;
 let dinoTank;
 let grassBackground;
 let darkModeGrassBackground;
-let grassFullBackground;
 let cactusPicture;
 let darkCactus;
 let twoCactus;
@@ -57,6 +57,7 @@ let state1 = "startScreen";
 let state2 = "isDinoJump";
 let state3 = "notOnPress";
 let stateDark = "light";
+let stateBlinking = "open";
 
 let font;
 
@@ -88,6 +89,7 @@ function preload(){
   dinoRight = loadImage("assets/runing dino right.png");
   darkDinoRight = loadImage("assets/dark running dino right.png");
   dinoJump = loadImage("assets/running dino jump.png");
+  dinoBlickingLight = loadImage("assets/dinoLightBlicking.png");
   darkDinoJump = loadImage("assets/darkDinoJump.png");
   dinoDead = loadImage("assets/dino dead.png");
   darkDinoDead = loadImage("assets/darkDeadDino.png");
@@ -95,7 +97,6 @@ function preload(){
   darkModeGrassBackground = loadImage("assets/darkModeGrass.png");
   cloadsBackground = loadImage("assets/cloads.png");
   darkCloadsBackground = loadImage("assets/darkCloads.png");
-  grassFullBackground = loadImage("assets/backgroundfull.png");
   cactusPicture = loadImage("assets/cactus.png");
   darkCactus = loadImage("assets/darkModeCactus.png");
   twoCactus = loadImage("assets/two cactai.png");
@@ -144,7 +145,13 @@ class Dinosour{
     // rect(this.x, this.y, this.w, this.w);
     if(state1 === "startScreen"){
       if(stateDark === "light"){
-        image(dinoJump, this.x, this.y, this.wD, this.wD);
+        if(stateBlinking === "open"){
+          image(dinoJump, this.x, this.y, this.wD, this.wD);
+        }
+        else if(stateBlinking === "closed"){
+          image(dinoBlickingLight, this.x, this.y, this.wD, this.wD);
+        }
+        
       }
       else if(stateDark === "dark"){
         image(darkDinoJump, this.x, this.y, this.wD, this.wD);
@@ -206,6 +213,17 @@ class Dinosour{
     
   }
   
+  blinking(){
+    if(stateBlinking === "open"  && millis()> lastTimeSwitched + 5500){
+      stateBlinking = "closed";
+      lastTimeSwitched = millis();
+    }
+    else if(stateBlinking === "closed"  && millis()> lastTimeSwitched + 200){
+      stateBlinking = "open";
+      lastTimeSwitched = millis();
+    }
+  }
+
   collision(Cactus){
     //debugging
     // circle(this.x + this.w/2 - 10, this.y + this.w/2 - 10, this.w - 20);
@@ -252,9 +270,9 @@ class Cactus{
 
   makeSpeedHigher(){
     this.speed = scrollSpeed1;
-    if(milliSecond % 40 === 0 && scrollSpeed1 < 30){
+    if(milliSecond % 30 === 0 && scrollSpeed1 < 30){
       
-      scrollSpeed1 += 0.1;
+      scrollSpeed1 += 0.01;
     }
   }
 
@@ -322,11 +340,8 @@ function switchBetweenModesFunction(){
   switchBetweenModes.image = imageSwitch;
   switchBetweenModes.cornerRadius = 3;
   switchBetweenModes.text = " "; 
-  switchBetweenModes.textFont = font;
   switchBetweenModes.strokeWeight = 3;
-  switchBetweenModes.textSize = 30;  
   switchBetweenModes.resize(50, 50);
-  switchBetweenModes.textColor = "grey"; 
   switchBetweenModes.stroke = strokeSwitch;  
 }
 
@@ -341,8 +356,8 @@ function existHowToPlayFunction(){
   existHowToPlay.strokeWeight = 3;
   existHowToPlay.textSize = 30;  
   existHowToPlay.resize(50, 50);
-  existHowToPlay.textColor = "grey"; 
-  existHowToPlay.stroke = "grey";  
+  existHowToPlay.textColor = 83,83,83; 
+  existHowToPlay.stroke = 83,83,83;  
 }
 
 function howToPlayButtonFunction(){
@@ -380,10 +395,10 @@ let fillSwitch;
 
 function switchBetweenModesImages(){
   if(stateDark === "light"){
-    fill("grey");
+    fill(83,83,83);
     imageSwitch = lightModeButtonImage;
     strokeSwitch = "white";
-    colourSwitch = "black";
+    colourSwitch = 83,83,83;
     fillSwitch = "white";
   }
   else if(stateDark === "dark"){
@@ -401,7 +416,7 @@ function switchBetweenModesImages(){
 }
 
 function draw(){
-  background("white");
+  
   highScoreCount();
   displayScore();
   sound();
@@ -433,7 +448,7 @@ function draw(){
   else if(state1 === "howTo"){
     displayHowTo();
   }
-  // easterEgg();
+  easterEgg();
 }
 let playing = true;
 
@@ -445,6 +460,7 @@ function displayCactai(){
       Cactai = [];
     }
     else{
+      
       theCactai.makeSpeedHigher();
       theCactai.move();
       dino.collision(theCactai);
@@ -452,11 +468,16 @@ function displayCactai(){
       
     }
   }
-  if(frameCount % 80 === 0){
-    cactais = new Cactus(this.x, this.y, this.imageOfCactai);
-    Cactai.push(cactais);
-  }
+  let minDistance = width/4;
+  if(Cactai.length <= 0 || width - Cactai[Cactai.length - 1].x >= nextSpawnDistance){
+        cactais = new Cactus(this.x, this.y, this.imageOfCactai);
+        Cactai.push(cactais);
+        nextSpawnDistance = random(minDistance, width);
+      }
+  
 }
+
+let nextSpawnDistance;
 
 function keyPressed(){
   if(key === " " && state1 === "startScreen"){
@@ -473,6 +494,7 @@ function keyPressed(){
 function startScreen(){
   
   if(stateDark === "light"){
+    background("white");
     image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
     image(cloadsBackground, x1Cloads, 0, width, height/2);
     text("press space to start", width/3.2, height/3);
@@ -480,13 +502,16 @@ function startScreen(){
   else if(stateDark === "dark"){
     image(darkModeGrassBackground, x1Grass, height - height/2, width, height - height/2);
     image(darkCloadsBackground, x1Cloads, 0, width, height/2);
+    text("press space to start", width/3.2, height/3);
   }
   howToPlayButton.draw();
   switchBetweenModes.draw();
 
   dino.display();
+  dino.blinking();
 }
-//change to part only of image
+
+
 
 function time(){
   milliSecond = int(millis()/100);
@@ -527,7 +552,7 @@ function displayScore(){
 
 let alreadyPlayed = "notYet";
 function easterEgg(){
-  if(milliSecond >= 20 && alreadyPlayed === "notYet"){
+  if(milliSecond >= 100 && alreadyPlayed === "notYet"){
       
     let completion = video.time()/video.duration();
     video.play();
@@ -536,16 +561,11 @@ function easterEgg(){
     video.size(width, height);
     video.showControls();
       
-
-      
-    if( completion === 100){
-        
+    if(completion === 1){
       alreadyPlayed = "Yet";
-        
-
     }  
   }
-  else if(milliSecond>= 20 && alreadyPlayed === "Yet"){
+  else if(milliSecond>= 100 && alreadyPlayed === "Yet"){
     video.pause();
   }
 }
@@ -616,9 +636,11 @@ function changePressHowTo2(){
 function changePressModes(){
   if(stateDark === "light"){
     stateDark = "dark";
+    state3 = "onPress";
   }
   else if(stateDark === "dark" ){
     stateDark = "light";
+    state3 = "onPress";
   }
 }
 
@@ -643,27 +665,37 @@ function displayGameOver(){
 }
 
 function displayHowTo(){
-  background(grassFullBackground);
+  if(stateDark === "light"){
+    background("white");
+    image(grassBackground, 0, height - height/3.8, width, height - height/1.3);
+    image(cloadsBackground, 0, 0, width, height/2);
+  }
+  else if(stateDark === "dark"){
+    image(darkModeGrassBackground, 0, height - height/2, width, height - height/2);
+    image(darkCloadsBackground, 0, 0, width, height/2);
+  }
+    line(width/2 - 200, 90, width/2 + 150, 90);
+    line(width/2 - 200, 565, width/2 + 150, 565);
+    text("press space to jump", width/2 - 300, 170);
+    text("the score is how long you have been playing", width/2 - 650, 340);
+    text("try not to die!!", width/2 - 250, 510);
   existHowToPlay.draw();
-  text("press space to jump", width/2 - 300, 170);
-  text("the score is how long you have been playing", width/2 - 650, 340);
-  text("try not to die!!", width/2 - 250, 510);
-  line(width/2 - 200, 90, width/2 + 150, 90);
-  line(width/2 - 200, 565, width/2 + 150, 565);
 }
 
 function moveBackground(){
   if(stateDark === "light"){
+    // background("white");
     image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
     image(grassBackground, x2Grass, height - height/3.8, width, height - height/1.3);
   }
   else if(stateDark === "dark"){
-    background("black");
+    // background("black");
     image(darkModeGrassBackground, x1Grass, height - height/2, width, height - height/2);
     image(darkModeGrassBackground, x2Grass, height - height/2, width, height - height/2);
   }
   x1Grass  -= scrollSpeed1 ;
   x2Grass -= scrollSpeed1;
+  
   
 
   if (x1Grass < -width ){
@@ -672,10 +704,12 @@ function moveBackground(){
   if (x2Grass < -width ){
     x2Grass = width;
   }
+  
 }
 
 function moveBackgroundCloads(){
   if(stateDark === "light"){
+    background("white");
     image(cloadsBackground, x1Cloads, 0, width, height/2);
     image(cloadsBackground, x2Cloads, 0, width, height/2);
   }

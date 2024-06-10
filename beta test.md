@@ -6,6 +6,7 @@
 - change speed as game goes on
 - change the how to botton and the Modes botton
 - make the dark mode switch in game over not just when you reset
+- add coins 
 
 ## What I did to fix it
 - I made the game start slow and then as time goes on it gets faster
@@ -19,6 +20,7 @@
 - Fix empty space in between scrolling pictures
 - change the sun colour
 - Make the dinosaur bigger
+- Make the distances between the cactai random because it's predictable after a while.
 
 ## What I did to fix it
 - added 'press space to start' on startscreen
