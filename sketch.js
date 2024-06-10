@@ -17,6 +17,7 @@ let darkDinoRight;
 let dinoJump;
 let dinoBlickingLight;
 let darkDinoJump;
+let darkBlinkingDino;
 let dinoDead;
 let darkDinoDead;
 let dinoTank;
@@ -90,6 +91,7 @@ function preload(){
   darkDinoRight = loadImage("assets/dark running dino right.png");
   dinoJump = loadImage("assets/running dino jump.png");
   dinoBlickingLight = loadImage("assets/dinoLightBlicking.png");
+  darkBlinkingDino = loadImage("assets/darkBlinkingDino.png");
   darkDinoJump = loadImage("assets/darkDinoJump.png");
   dinoDead = loadImage("assets/dino dead.png");
   darkDinoDead = loadImage("assets/darkDeadDino.png");
@@ -149,12 +151,18 @@ class Dinosour{
           image(dinoJump, this.x, this.y, this.wD, this.wD);
         }
         else if(stateBlinking === "closed"){
-          image(dinoBlickingLight, this.x, this.y, this.wD, this.wD);
+          image(dinoBlickingLight, this.x , this.y, this.wD, this.wD);
         }
         
       }
       else if(stateDark === "dark"){
-        image(darkDinoJump, this.x, this.y, this.wD, this.wD);
+        
+        if(stateBlinking === "open"){
+          image(darkDinoJump, this.x, this.y, this.wD, this.wD);
+        }
+        else if(stateBlinking === "closed"){
+          image(darkBlinkingDino, this.x , this.y, this.wD, this.wD);
+        }
       }
     }
 
@@ -214,11 +222,11 @@ class Dinosour{
   }
   
   blinking(){
-    if(stateBlinking === "open"  && millis()> lastTimeSwitched + 5500){
+    if(stateBlinking === "open"  && millis()> lastTimeSwitched + 5000){
       stateBlinking = "closed";
       lastTimeSwitched = millis();
     }
-    else if(stateBlinking === "closed"  && millis()> lastTimeSwitched + 200){
+    else if(stateBlinking === "closed"  && millis()> lastTimeSwitched + 300){
       stateBlinking = "open";
       lastTimeSwitched = millis();
     }
@@ -448,7 +456,7 @@ function draw(){
   else if(state1 === "howTo"){
     displayHowTo();
   }
-  easterEgg();
+  // easterEgg();
 }
 let playing = true;
 
@@ -468,12 +476,12 @@ function displayCactai(){
       
     }
   }
-  let minDistance = width/4;
+  let minDistance = width/3;
   if(Cactai.length <= 0 || width - Cactai[Cactai.length - 1].x >= nextSpawnDistance){
-        cactais = new Cactus(this.x, this.y, this.imageOfCactai);
-        Cactai.push(cactais);
-        nextSpawnDistance = random(minDistance, width);
-      }
+    cactais = new Cactus(this.x, this.y, this.imageOfCactai);
+    Cactai.push(cactais);
+    nextSpawnDistance = random(minDistance, width);
+  }
   
 }
 
@@ -674,22 +682,23 @@ function displayHowTo(){
     image(darkModeGrassBackground, 0, height - height/2, width, height - height/2);
     image(darkCloadsBackground, 0, 0, width, height/2);
   }
-    line(width/2 - 200, 90, width/2 + 150, 90);
-    line(width/2 - 200, 565, width/2 + 150, 565);
-    text("press space to jump", width/2 - 300, 170);
-    text("the score is how long you have been playing", width/2 - 650, 340);
-    text("try not to die!!", width/2 - 250, 510);
+  line(width/2 - 200, 90, width/2 + 150, 90);
+  line(width/2 - 200, 565, width/2 + 150, 565);
+  text("press space to jump", width/2 - 300, 170);
+  text("the score is how long you have been playing", width/2 - 650, 340);
+  text("try not to die!!", width/2 - 250, 510);
   existHowToPlay.draw();
 }
 
 function moveBackground(){
   if(stateDark === "light"){
     // background("white");
+    image(grassBackground, 0, height - height/3.8, width, height - height/1.3);
     image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
     image(grassBackground, x2Grass, height - height/3.8, width, height - height/1.3);
   }
   else if(stateDark === "dark"){
-    // background("black");
+    
     image(darkModeGrassBackground, x1Grass, height - height/2, width, height - height/2);
     image(darkModeGrassBackground, x2Grass, height - height/2, width, height - height/2);
   }
@@ -714,6 +723,7 @@ function moveBackgroundCloads(){
     image(cloadsBackground, x2Cloads, 0, width, height/2);
   }
   else if(stateDark === "dark"){
+    background("black");
     image(darkCloadsBackground, x1Cloads, 0, width, height/2);
     image(darkCloadsBackground, x2Cloads, 0, width, height/2);
   }
