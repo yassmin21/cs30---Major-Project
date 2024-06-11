@@ -124,7 +124,7 @@ class Dinosour{
     this.wD = height/5.8;
     this.wB = height/4;
     this.hD = this.wD;
-    this.gravity = 4;
+    this.gravity = 3.8;
     this.velocity = 0;
 
   }
@@ -257,11 +257,8 @@ class Cactus{
   constructor(x, y, imageOfCactai){
     this.x = width;
     this.y = height - height/6 - height/10.5,
-    //178
     this.h = height/6;
-    //50
     this.w = width/ 20;
-    //30
     this.speed = 18;
     this.a = cactusPicture;
     this.b = twoCactus;
@@ -274,7 +271,6 @@ class Cactus{
 
   }
 
-  //add more cactus pics
 
   makeSpeedHigher(){
     this.speed = scrollSpeed1;
@@ -324,7 +320,7 @@ class Cactus{
 }
 
 let video;
-//600, 250
+
 function setup(){
   createCanvas(windowWidth, windowHeight);
   dino = new Dinosour(this.x, this.y);
@@ -447,11 +443,11 @@ function draw(){
     dino.display();
     dino.switchBetweenDinos();
     dino.run();
+    switchMidGameSetting();
   }
   else if(state1 === "dead"){
     resetGame();
     displayGameOver();
-    
   }
   else if(state1 === "howTo"){
     displayHowTo();
@@ -488,11 +484,11 @@ function displayCactai(){
 let nextSpawnDistance;
 
 function keyPressed(){
-  if(key === " " && state1 === "startScreen"){
+  if(key === " " || keyCode === UP_ARROW || keyCode === 87 && state1 === "startScreen"){
     state1 = "playing";
     dino.jump();
   }
-  else if(key === " " && state1 === "playing"){
+  else if(key === " " || keyCode === UP_ARROW || keyCode === 87 && state1 === "playing"){
     state2 = "isDinoJump";
     dino.jump();
     lastTimeSwitched = millis();
@@ -607,14 +603,15 @@ function displayHighScore(){
 }
 
 function resetGame (){
-  if (state1 === "dead" && state3  === "onPress") {
+  if (state1 === "dead" && state3 === "onPress") {
     state1 = "playing";
-    startTime = int(millis()/100);
-    Cactai = [];
-    dino.resetDino();
     milliSecond = 0;
-    scrollSpeed1 = 18;
+    
   }
+  startTime = int(millis()/100);
+  scrollSpeed1 = 18;
+  Cactai = [];
+  dino.resetDino();
 }
 
 let stateChangeStart = "blabla";
@@ -739,3 +736,13 @@ function moveBackgroundCloads(){
     x2Cloads = width;
   }
 }
+
+function switchMidGameSetting(){
+  if(milliSecond === 200){
+    stateDark = "dark";
+  }
+  else if(milliSecond === 400){
+    stateDark = "light";
+  }
+}
+
