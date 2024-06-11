@@ -3,7 +3,7 @@
 // 5 / 3/ 2024
 //
 // Extra for Experts:
-// - constrain
+// - constrain, video
 
 
 //535353 HEX COLOUR
@@ -22,7 +22,9 @@ let dinoDead;
 let darkDinoDead;
 let dinoTank;
 let grassBackground;
+let grassBackgroundEmpty;
 let darkModeGrassBackground;
+let darkModeGrassBackgroundEmpty;
 let cactusPicture;
 let darkCactus;
 let twoCactus;
@@ -30,6 +32,7 @@ let twoDarkCactus;
 let moreCactus;
 let moreDarkCactus;
 let resetBottonImage;
+let darkResetButtonImage;
 let darkModeButtonImage;
 let lightModeButtonImage;
 let gameOverImage;
@@ -96,7 +99,9 @@ function preload(){
   dinoDead = loadImage("assets/dino dead.png");
   darkDinoDead = loadImage("assets/darkDeadDino.png");
   grassBackground = loadImage("assets/background.png");
+  grassBackgroundEmpty = loadImage("assets/backgroundEmpty.png");
   darkModeGrassBackground = loadImage("assets/darkModeGrass.png");
+  darkModeGrassBackgroundEmpty = loadImage("assets/darkGrassBackgroundEmpty.png");
   cloadsBackground = loadImage("assets/cloads.png");
   darkCloadsBackground = loadImage("assets/darkCloads.png");
   cactusPicture = loadImage("assets/cactus.png");
@@ -106,6 +111,7 @@ function preload(){
   moreCactus = loadImage("assets/a lot of cactai.png");
   moreDarkCactus = loadImage("assets/3DarkCactai.png");
   resetBottonImage = loadImage("assets/resetButton.png");
+  darkResetButtonImage = loadImage("assets/darkModeReset.png");
   darkModeButtonImage = loadImage("assets/darkModeButton.png");
   lightModeButtonImage = loadImage("assets/lightModeButton.png");
   gameOverImage = loadImage("assets/gameover.png");
@@ -385,7 +391,7 @@ function resetButtonFunction(){
   resetButton = new Clickable();
   resetButton.locate(windowWidth/2 - 30, windowHeight/2);
   resetButton.onPress = changePressGameOver;
-  resetButton.image = resetBottonImage;
+  resetButton.image = imageSwitch2;
   resetButton.fitImage = true; 
   resetButton.resize(60,50);
   resetButton.text = " ";  
@@ -396,11 +402,13 @@ let imageSwitch;
 let strokeSwitch;
 let colourSwitch;
 let fillSwitch;
+let imageSwitch2;
 
 function switchBetweenModesImages(){
   if(stateDark === "light"){
     fill(83,83,83);
     imageSwitch = lightModeButtonImage;
+    imageSwitch2 = resetBottonImage;
     strokeSwitch = "white";
     colourSwitch = 83,83,83;
     fillSwitch = "white";
@@ -408,10 +416,12 @@ function switchBetweenModesImages(){
   else if(stateDark === "dark"){
     fill("white");
     imageSwitch = darkModeButtonImage;
+    imageSwitch2 = darkResetButtonImage;
     strokeSwitch = "black";
     colourSwitch = "white";
     fillSwitch = "black";
   }
+  resetButton.image = imageSwitch2; 
   switchBetweenModes.image = imageSwitch;
   switchBetweenModes.stroke = strokeSwitch; 
   howToPlayButton.textColor = colourSwitch; 
@@ -488,12 +498,14 @@ function keyPressed(){
     state1 = "playing";
     dino.jump();
   }
-  else if(key === " " || keyCode === UP_ARROW || keyCode === 87 && state1 === "playing"){
+  else if(keyCode === UP_ARROW || keyCode === 87 || keyIsPressed || keyIsDown(32) && state1 === "playing"){
     state2 = "isDinoJump";
     dino.jump();
     lastTimeSwitched = millis();
   }
 }
+
+
 
 function startScreen(){
   
@@ -690,12 +702,12 @@ function displayHowTo(){
 function moveBackground(){
   if(stateDark === "light"){
     // background("white");
-    image(grassBackground, 0, height - height/3.8, width, height - height/1.3);
+    image(grassBackgroundEmpty, 0, height - height/3.8, width, height - height/1.3);
     image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
     image(grassBackground, x2Grass, height - height/3.8, width, height - height/1.3);
   }
   else if(stateDark === "dark"){
-    
+    image(darkModeGrassBackgroundEmpty, 0, height - height/2, width, height - height/2);
     image(darkModeGrassBackground, x1Grass, height - height/2, width, height - height/2);
     image(darkModeGrassBackground, x2Grass, height - height/2, width, height - height/2);
   }
@@ -740,6 +752,7 @@ function moveBackgroundCloads(){
 function switchMidGameSetting(){
   if(milliSecond === 200){
     stateDark = "dark";
+    
   }
   else if(milliSecond === 400){
     stateDark = "light";
