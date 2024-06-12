@@ -3,7 +3,7 @@
 // 5 / 3/ 2024
 //
 // Extra for Experts:
-// - constrain, video
+// - constrain, video, scrolling screen
 
 
 //535353 HEX COLOUR
@@ -393,7 +393,7 @@ function resetButtonFunction(){
   resetButton.onPress = changePressGameOver;
   resetButton.image = imageSwitch2;
   resetButton.fitImage = true; 
-  resetButton.resize(60,50);
+  resetButton.resize(70,60);
   resetButton.text = " ";  
   resetButton.strokeWeight = 0;
 }
@@ -462,7 +462,7 @@ function draw(){
   else if(state1 === "howTo"){
     displayHowTo();
   }
-  // easterEgg();
+  easterEgg();
 }
 let playing = true;
 
