@@ -10,6 +10,8 @@
 
 // make it look like the game score
 
+
+//variable names for my images, sounds and video
 let dinoleft;
 let darkDinoLeft;
 let dinoRight;
@@ -57,6 +59,8 @@ let highScore = 0;
 let lastTimeSwitched = 0;
 let duration = 70;
 
+
+//different state variables
 let state1 = "startScreen";
 let state2 = "isDinoJump";
 let state3 = "notOnPress";
@@ -68,6 +72,7 @@ let font;
 let dino;
 let cactais;
 
+// different button variables
 let resetButton;
 let howToPlayButton;
 let existHowToPlay;
@@ -77,6 +82,7 @@ let Cactai = [];
 let milliSecond;
 let startTime;
 
+//variables for scrolling image
 let x1Cloads = 0;
 let x2Cloads;
 let x1Grass = 0;
@@ -84,9 +90,7 @@ let x2Grass;
 let scrollSpeed1 = 18;
 let scrollSpeed2 = 1;
 
-//state dead
-//92 97
-
+// preload all the assets
 function preload(){
   dinoleft = loadImage("assets/running dino left.png");
   darkDinoLeft = loadImage("assets/dark running dino left.png");
@@ -123,6 +127,8 @@ function preload(){
   video = createVideo("assets/rickRollVideo.mp4");
 }
 
+
+//my dino class
 class Dinosour{
   constructor(x, y){
     this.x = 60;
@@ -136,6 +142,7 @@ class Dinosour{
   }
 
   jump(){
+    // this makes it so that when the y value is on the ground the velocity decreases so the dino jumps and the sound affect starts
     if(this.y === height - height/3.9){
       this.velocity = -50;
       jumpSound.play();
@@ -144,14 +151,15 @@ class Dinosour{
   }
 
   run(){
+    // the y value moves with the velocity and the velocity is affected by the gravity, the y value cant go above or below a certain point
     this.y += this.velocity;
     this.velocity += this.gravity;
     this.y = constrain(this.y, height/20, height - height/3.9);
   }
 
   display(){
-    // rect(this.x, this.y, this.w, this.w);
     if(state1 === "startScreen"){
+      //if we are in the startscreen the dino images switch between his eyes are open or closed
       if(stateDark === "light"){
         if(stateBlinking === "open"){
           image(dinoJump, this.x, this.y, this.wD, this.wD);
@@ -173,6 +181,7 @@ class Dinosour{
     }
 
     else if(state1 === "playing"){
+      // if we are playing the feet switch images back and forth so it shows that the dino is running
       if(state2 === "isLeftFoot"){
         if(stateDark === "light"){
           image(dinoleft, this.x, this.y, this.wD, this.wD);
@@ -200,6 +209,7 @@ class Dinosour{
       
     }
     else if(state1 === "dead"){
+      //if the state is dead it shows the dead dino image
       if(stateDark === "light"){
         image(dinoDead, this.x, this.y, this.wD, this.wD);
       }
@@ -212,6 +222,7 @@ class Dinosour{
   }
 
   switchBetweenDinos(){
+    //the logic behind switching the feet. the feet switch when ....
     if(state2 === "isLeftFoot" && millis()> lastTimeSwitched + duration){
       state2 = "isRightFoot";
       lastTimeSwitched = millis();
@@ -228,6 +239,7 @@ class Dinosour{
   }
   
   blinking(){
+    //the logic behind blinking
     if(stateBlinking === "open"  && millis()> lastTimeSwitched + 5000){
       stateBlinking = "closed";
       lastTimeSwitched = millis();
@@ -239,11 +251,7 @@ class Dinosour{
   }
 
   collision(Cactus){
-    //debugging
-    // circle(this.x + this.w/2 - 10, this.y + this.w/2 - 10, this.w - 20);
-    // rect(Cactus.x, Cactus.y, Cactus.w, Cactus.h);
-
-    // hit = collideRectRect(this.x, this.y, this.w, this.w, Cactus.x, Cactus.y, Cactus.w, Cactus.h);
+    //if the cactus hits the dino the dino dies and so the state is dead and the dead soundaffect plays
     hit = collideRectCircle( Cactus.x, Cactus.y, Cactus.w, Cactus.h, this.x + this.wD/2 - 10, this.y + this.wD/2 - 10, this.wD - 20);
     
     if(hit){
@@ -253,12 +261,13 @@ class Dinosour{
   }
 
   resetDino(){
+    //the velocity is set to 0 so the dino doesnt jump and the y value is set back to origin
     this.velocity = 0;
     this.y = height - height/4.3;
   }
 }
 
-
+//my cactus class
 class Cactus{
   constructor(x, y, imageOfCactai){
     this.x = width;
