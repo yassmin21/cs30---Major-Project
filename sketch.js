@@ -46,6 +46,7 @@ let cloadsBackground;
 let darkCloadsBackground;
 
 
+//different cactai images variables
 let imageOfCactai;
 let a;
 let b;
@@ -59,6 +60,7 @@ let highScore = 0;
 let lastTimeSwitched = 0;
 let duration = 70;
 
+let nextSpawnDistance;
 
 //different state variables
 let state1 = "startScreen";
@@ -89,6 +91,18 @@ let x1Grass = 0;
 let x2Grass;
 let scrollSpeed1 = 18;
 let scrollSpeed2 = 1;
+
+//video variables
+let video;
+let playing = true;
+
+
+//button variables
+let imageSwitch;
+let strokeSwitch;
+let colourSwitch;
+let fillSwitch;
+let imageSwitch2;
 
 // preload all the assets
 function preload(){
@@ -275,12 +289,14 @@ class Cactus{
     this.h = height/6;
     this.w = width/ 20;
     this.speed = 18;
+    // sets each cactus picture to a variable
     this.a = cactusPicture;
     this.b = twoCactus;
     this.c = moreCactus;
     this.aDark = darkCactus;
     this. bDark = twoDarkCactus;
     this.cDark = moreDarkCactus;
+    //randomly chooses from the cactus image variables
     this.imageOfCactai = random([this.a, this.b, this.c]);
     this.darkImageOfCactai = random([this.aDark, this.bDark, this.cDark]);
 
@@ -288,6 +304,7 @@ class Cactus{
 
 
   makeSpeedHigher(){
+    //every 30 milliseconds the speed increases by 0.01, if you are under 30 (30 is really fast after that the game gets unplayable)
     this.speed = scrollSpeed1;
     if(milliSecond % 30 === 0 && scrollSpeed1 < 30){
       
@@ -296,11 +313,12 @@ class Cactus{
   }
 
   move(){
+    //this links the cactais x value to the speed 
     this.x -= this.speed;
   }
 
   display(){
-    // rect(this.x, this.y, 10, this.w);
+    //each picture has different widths to those are changed too
     if(stateDark === "light"){
       if(this.imageOfCactai === this.a){
         this.w = width/20;
@@ -324,38 +342,50 @@ class Cactus{
       else if(this.darkImageOfCactai === this.cDark){
         this.w = width/9;
       }
+      // displays the cactus depending on which one was chosen before randomly
       image(this.darkImageOfCactai, this.x, this.y, this.w, this.h); 
     }
   }
 
   disapeared(){
+    //if the cactus x value is less than 0
     this.x > 0;
   }
   
 }
 
-let video;
+
 
 function setup(){
   createCanvas(windowWidth, windowHeight);
+  //making a dino at the x and y value set before
   dino = new Dinosour(this.x, this.y);
+
+  //constants for text
   textSize(30);
   textFont(font);
+
+  //this hides the video so it doesnt show up when we first create the canvas
   video.hide();
+
+  //making all the buttons
   resetButtonFunction();
   howToPlayButtonFunction();
-  existHowToPlayFunction();
+  exitHowToPlayFunction();
   switchBetweenModesFunction();
   
+  //setting the values for the second picture of grass and the cloads images (scrolling background)
   x2Cloads = width;
   x2Grass = width;
 }
 
 function switchBetweenModesFunction(){
+  //this function makes the dark mode and light mode switch button
   // eslint-disable-next-line no-undef
   switchBetweenModes = new Clickable();
   switchBetweenModes.locate(width - 90, 200);
   switchBetweenModes.onPress = changePressModes;
+  //the image switches depending on which state we are in
   switchBetweenModes.image = imageSwitch;
   switchBetweenModes.cornerRadius = 3;
   switchBetweenModes.text = " "; 
@@ -364,7 +394,8 @@ function switchBetweenModesFunction(){
   switchBetweenModes.stroke = strokeSwitch;  
 }
 
-function existHowToPlayFunction(){
+function exitHowToPlayFunction(){
+  //exit how to play screen button
   // eslint-disable-next-line no-undef
   existHowToPlay = new Clickable();
   existHowToPlay.locate(width - 90, 50);
@@ -375,11 +406,13 @@ function existHowToPlayFunction(){
   existHowToPlay.strokeWeight = 3;
   existHowToPlay.textSize = 30;  
   existHowToPlay.resize(50, 50);
+  //colour grey 
   existHowToPlay.textColor = 83,83,83; 
   existHowToPlay.stroke = 83,83,83;  
 }
 
 function howToPlayButtonFunction(){
+  //how to play button 
   // eslint-disable-next-line no-undef
   howToPlayButton = new Clickable();
   howToPlayButton.locate(width - 90, 100);
@@ -396,6 +429,7 @@ function howToPlayButtonFunction(){
 }
 
 function resetButtonFunction(){
+  //game over reset button 
   // eslint-disable-next-line no-undef
   resetButton = new Clickable();
   resetButton.locate(windowWidth/2 - 30, windowHeight/2);
@@ -407,13 +441,10 @@ function resetButtonFunction(){
   resetButton.strokeWeight = 0;
 }
 
-let imageSwitch;
-let strokeSwitch;
-let colourSwitch;
-let fillSwitch;
-let imageSwitch2;
 
-function switchBetweenModesImages(){
+
+function switchBetweenModesImagesButtons(){
+  //some changes that happen in light and dark mode (makes button changes easier)
   if(stateDark === "light"){
     fill(83,83,83);
     imageSwitch = lightModeButtonImage;
@@ -443,7 +474,7 @@ function draw(){
   highScoreCount();
   displayScore();
   sound();
-  switchBetweenModesImages();
+  switchBetweenModesImagesButtons();
   
 
   if(state1 === "startScreen"){
@@ -459,10 +490,8 @@ function draw(){
     time();
     displayScore();
     displayCactai();
-    dino.display();
-    dino.switchBetweenDinos();
-    dino.run();
-    switchMidGameSetting();
+    displayDino();
+    
   }
   else if(state1 === "dead"){
     resetGame();
@@ -473,9 +502,14 @@ function draw(){
   }
   easterEgg();
 }
-let playing = true;
 
-
+function displayDino(){
+  //displays the dino and makes it run and after a certain amount of time the dino turns dark
+  dino.display();
+  dino.switchBetweenDinos();
+  dino.run();
+  switchMidGameSetting();
+}
 
 function displayCactai(){
   for(let theCactai of Cactai){
@@ -500,7 +534,7 @@ function displayCactai(){
   
 }
 
-let nextSpawnDistance;
+
 
 function keyPressed(){
   if(key === " " || keyCode === UP_ARROW || keyCode === 87 && state1 === "startScreen"){
