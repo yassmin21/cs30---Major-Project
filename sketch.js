@@ -68,6 +68,7 @@ let state2 = "isDinoJump";
 let state3 = "notOnPress";
 let stateDark = "light";
 let stateBlinking = "open";
+let stateChangeStart = "before";
 
 let font;
 
@@ -95,7 +96,7 @@ let scrollSpeed2 = 1;
 //video variables
 let video;
 let playing = true;
-
+let alreadyPlayed = "notYet";
 
 //button variables
 let imageSwitch;
@@ -103,6 +104,8 @@ let strokeSwitch;
 let colourSwitch;
 let fillSwitch;
 let imageSwitch2;
+
+let displayHighScoreNumber = 0;
 
 // preload all the assets
 function preload(){
@@ -470,7 +473,7 @@ function switchBetweenModesImagesButtons(){
 }
 
 function draw(){
-  
+  //some universal functions
   highScoreCount();
   displayScore();
   sound();
@@ -479,25 +482,31 @@ function draw(){
 
   if(state1 === "startScreen"){
     startScreen();
+    //sets startscreen as the millisecond value at that moment
     startTime = int(millis()/100);
   }
   else if(state1 === "playing"){
+    //button and background screen
     state3 = "notOnPress";
     moveBackgroundCloads();
     moveBackground();
     howToPlayButton.draw();
     switchBetweenModes.draw();
+    //time and score
     time();
     displayScore();
+    //display dino and cactus
     displayCactai();
     displayDino();
     
   }
   else if(state1 === "dead"){
+    // reset the game and display the gameover screen
     resetGame();
     displayGameOver();
   }
   else if(state1 === "howTo"){
+    //displays how to screen
     displayHowTo();
   }
   easterEgg();
@@ -514,10 +523,11 @@ function displayDino(){
 function displayCactai(){
   for(let theCactai of Cactai){
     if(theCactai.disapeared()){
+      //if the cactus is otsidethe screen empty the array
       Cactai = [];
     }
     else{
-      
+      //if the cactus is inthe screen do everything else 
       theCactai.makeSpeedHigher();
       theCactai.move();
       dino.collision(theCactai);
@@ -525,6 +535,7 @@ function displayCactai(){
       
     }
   }
+  //randomize distance between cactai withen a range
   let minDistance = width/3;
   if(Cactai.length <= 0 || width - Cactai[Cactai.length - 1].x >= nextSpawnDistance){
     cactais = new Cactus(this.x, this.y, this.imageOfCactai);
@@ -538,10 +549,12 @@ function displayCactai(){
 
 function keyPressed(){
   if(key === " " || keyCode === UP_ARROW || keyCode === 87 && state1 === "startScreen"){
+    // if the state is startscreen and you press the key you start playing and make the dino jump
     state1 = "playing";
     dino.jump();
   }
   else if(keyCode === UP_ARROW || keyCode === 87 || keyIsPressed || keyIsDown(32) && state1 === "playing"){
+    //if your playing and you press the key it makes the dino jump
     state2 = "isDinoJump";
     dino.jump();
     lastTimeSwitched = millis();
@@ -551,7 +564,7 @@ function keyPressed(){
 
 
 function startScreen(){
-  
+  //displays the startcreen and has the function for blinking and the buttons
   if(stateDark === "light"){
     background("white");
     image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
@@ -579,8 +592,9 @@ function time(){
   }
 }
 
-let displayHighScoreNumber = 0;
+
 function highScoreCount(){
+  //records highscrore
   if(milliSecond > highScore){
     highScore = milliSecond;
     
@@ -589,7 +603,7 @@ function highScoreCount(){
 }
 
 function displayScore(){
-  
+  //this makes the 0s indent every time another is added
   if(milliSecond< 10){
     text("0000" + milliSecond, width - 200, 60);
   }
@@ -609,8 +623,9 @@ function displayScore(){
   
 }
 
-let alreadyPlayed = "notYet";
+
 function easterEgg(){
+  //if we are more than 100 and we havent play the video then the video plays
   if(milliSecond >= 100 && alreadyPlayed === "notYet"){
       
     let completion = video.time()/video.duration();
@@ -625,12 +640,14 @@ function easterEgg(){
     }  
   }
   else if(milliSecond>= 100 && alreadyPlayed === "Yet"){
+    //if we already played the video then pause the video
     video.pause();
   }
 }
 
 function sound(){
   if(milliSecond % 100 === 0 && milliSecond !== 0){
+    //every 100 milliseconds play the point sound
     if (!pointSound.isPlaying()) {
       pointSound.play();
     }
@@ -639,6 +656,7 @@ function sound(){
 }
 
 function displayHighScore(){
+  //this makes the 0s indent every time another is added and with HI (highscore)
   if(highScore< 10){
     text("HI " + "0000" + displayHighScoreNumber, width - 480, 60);
   }
@@ -658,6 +676,7 @@ function displayHighScore(){
 }
 
 function resetGame (){
+  //
   if (state1 === "dead" && state3 === "onPress") {
     state1 = "playing";
     milliSecond = 0;
@@ -669,7 +688,7 @@ function resetGame (){
   dino.resetDino();
 }
 
-let stateChangeStart = "blabla";
+
 function changePressHowTo(){
   if(state1 === "startScreen"){
     state1 = "howTo";
@@ -744,7 +763,6 @@ function displayHowTo(){
 
 function moveBackground(){
   if(stateDark === "light"){
-    // background("white");
     image(grassBackgroundEmpty, 0, height - height/3.8, width, height - height/1.3);
     image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
     image(grassBackground, x2Grass, height - height/3.8, width, height - height/1.3);
