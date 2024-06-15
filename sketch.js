@@ -3,13 +3,9 @@
 // 5 / 3/ 2024
 //
 // Extra for Experts:
-// - constrain, video, scrolling screen
-
-
-//535353 HEX COLOUR
-
-// make it look like the game score
-
+// - My main extra for experts is implementing a srolling screen where i learned a lot about how to get the background to move.
+// - adding on I learned about prelouding and displaying video in p5js
+// - lastly I learned about an easier way to keep something whithn a specific space on the screen by doing constrain
 
 //variable names for my images, sounds and video
 let dinoleft;
@@ -45,7 +41,6 @@ let pointSound;
 let cloadsBackground;
 let darkCloadsBackground;
 
-
 //different cactai images variables
 let imageOfCactai;
 let a;
@@ -55,7 +50,11 @@ let choices;
 
 let hit;
 
+//score variables
 let highScore = 0;
+let milliSecond;
+let startTime;
+let displayHighScoreNumber = 0;
 
 let lastTimeSwitched = 0;
 let duration = 70;
@@ -82,8 +81,6 @@ let existHowToPlay;
 let switchBetweenModes;
 
 let Cactai = [];
-let milliSecond;
-let startTime;
 
 //variables for scrolling image
 let x1Cloads = 0;
@@ -104,8 +101,6 @@ let strokeSwitch;
 let colourSwitch;
 let fillSwitch;
 let imageSwitch2;
-
-let displayHighScoreNumber = 0;
 
 // preload all the assets
 function preload(){
@@ -144,7 +139,6 @@ function preload(){
   video = createVideo("assets/rickRollVideo.mp4");
 }
 
-
 //my dino class
 class Dinosour{
   constructor(x, y){
@@ -157,7 +151,6 @@ class Dinosour{
     this.velocity = 0;
 
   }
-
   jump(){
     // this makes it so that when the y value is on the ground the velocity decreases so the dino jumps and the sound affect starts
     if(this.y === height - height/3.9){
@@ -166,14 +159,12 @@ class Dinosour{
     }
       
   }
-
   run(){
     // the y value moves with the velocity and the velocity is affected by the gravity, the y value cant go above or below a certain point
     this.y += this.velocity;
     this.velocity += this.gravity;
     this.y = constrain(this.y, height/20, height - height/3.9);
   }
-
   display(){
     if(state1 === "startScreen"){
       //if we are in the startscreen the dino images switch between his eyes are open or closed
@@ -196,7 +187,6 @@ class Dinosour{
         }
       }
     }
-
     else if(state1 === "playing"){
       // if we are playing the feet switch images back and forth so it shows that the dino is running
       if(state2 === "isLeftFoot"){
@@ -223,7 +213,6 @@ class Dinosour{
           image(darkDinoJump, this.x, this.y, this.wD, this.wD);
         }
       }
-      
     }
     else if(state1 === "dead"){
       //if the state is dead it shows the dead dino image
@@ -233,11 +222,8 @@ class Dinosour{
       else if(stateDark === "dark"){
         image(darkDinoDead, this.x, this.y, this.wD, this.wD);
       }
-      
     }
-    
   }
-
   switchBetweenDinos(){
     //the logic behind switching the feet. the feet switch when ....
     if(state2 === "isLeftFoot" && millis()> lastTimeSwitched + duration){
@@ -254,7 +240,6 @@ class Dinosour{
     }
     
   }
-  
   blinking(){
     //the logic behind blinking
     if(stateBlinking === "open"  && millis()> lastTimeSwitched + 5000){
@@ -266,7 +251,6 @@ class Dinosour{
       lastTimeSwitched = millis();
     }
   }
-
   collision(Cactus){
     //if the cactus hits the dino the dino dies and so the state is dead and the dead soundaffect plays
     hit = collideRectCircle( Cactus.x, Cactus.y, Cactus.w, Cactus.h, this.x + this.wD/2 - 10, this.y + this.wD/2 - 10, this.wD - 20);
@@ -276,7 +260,6 @@ class Dinosour{
       state1 = "dead";
     }
   }
-
   resetDino(){
     //the velocity is set to 0 so the dino doesnt jump and the y value is set back to origin
     this.velocity = 0;
@@ -304,8 +287,6 @@ class Cactus{
     this.darkImageOfCactai = random([this.aDark, this.bDark, this.cDark]);
 
   }
-
-
   makeSpeedHigher(){
     //every 30 milliseconds the speed increases by 0.01, if you are under 30 (30 is really fast after that the game gets unplayable)
     this.speed = scrollSpeed1;
@@ -314,12 +295,10 @@ class Cactus{
       scrollSpeed1 += 0.01;
     }
   }
-
   move(){
     //this links the cactais x value to the speed 
     this.x -= this.speed;
   }
-
   display(){
     //each picture has different widths to those are changed too
     if(stateDark === "light"){
@@ -349,34 +328,26 @@ class Cactus{
       image(this.darkImageOfCactai, this.x, this.y, this.w, this.h); 
     }
   }
-
   disapeared(){
     //if the cactus x value is less than 0
     this.x > 0;
   }
-  
 }
-
-
 
 function setup(){
   createCanvas(windowWidth, windowHeight);
   //making a dino at the x and y value set before
   dino = new Dinosour(this.x, this.y);
-
   //constants for text
   textSize(30);
   textFont(font);
-
   //this hides the video so it doesnt show up when we first create the canvas
   video.hide();
-
   //making all the buttons
   resetButtonFunction();
   howToPlayButtonFunction();
   exitHowToPlayFunction();
   switchBetweenModesFunction();
-  
   //setting the values for the second picture of grass and the cloads images (scrolling background)
   x2Cloads = width;
   x2Grass = width;
@@ -444,8 +415,6 @@ function resetButtonFunction(){
   resetButton.strokeWeight = 0;
 }
 
-
-
 function switchBetweenModesImagesButtons(){
   //some changes that happen in light and dark mode (makes button changes easier)
   if(stateDark === "light"){
@@ -478,7 +447,6 @@ function draw(){
   displayScore();
   sound();
   switchBetweenModesImagesButtons();
-  
 
   if(state1 === "startScreen"){
     startScreen();
@@ -498,7 +466,6 @@ function draw(){
     //display dino and cactus
     displayCactai();
     displayDino();
-    
   }
   else if(state1 === "dead"){
     // reset the game and display the gameover screen
@@ -542,10 +509,7 @@ function displayCactai(){
     Cactai.push(cactais);
     nextSpawnDistance = random(minDistance, width);
   }
-  
 }
-
-
 
 function keyPressed(){
   if(key === " " || keyCode === UP_ARROW || keyCode === 87 && state1 === "startScreen"){
@@ -560,8 +524,6 @@ function keyPressed(){
     lastTimeSwitched = millis();
   }
 }
-
-
 
 function startScreen(){
   //displays the startcreen and has the function for blinking and the buttons
@@ -578,12 +540,9 @@ function startScreen(){
   }
   howToPlayButton.draw();
   switchBetweenModes.draw();
-
   dino.display();
   dino.blinking();
 }
-
-
 
 function time(){
   milliSecond = int(millis()/100);
@@ -592,12 +551,10 @@ function time(){
   }
 }
 
-
 function highScoreCount(){
   //records highscrore
   if(milliSecond > highScore){
     highScore = milliSecond;
-    
   }
   displayHighScoreNumber = highScore;
 }
@@ -620,21 +577,17 @@ function displayScore(){
   else if(milliSecond>= 10000 && milliSecond < 100000){
     text( milliSecond, width - 200, 60);
   }
-  
 }
-
 
 function easterEgg(){
   //if we are more than 100 and we havent play the video then the video plays
   if(milliSecond >= 100 && alreadyPlayed === "notYet"){
-      
     let completion = video.time()/video.duration();
     video.play();
     let img = video.get();
     image(img, 0, 0); 
     video.size(width, height);
     video.showControls();
-      
     if(completion === 1){
       alreadyPlayed = "Yet";
     }  
@@ -652,7 +605,6 @@ function sound(){
       pointSound.play();
     }
   }
- 
 }
 
 function displayHighScore(){
@@ -672,15 +624,13 @@ function displayHighScore(){
   else if(highScore>= 10000 && highScore <= 100000){
     text("HI " + displayHighScoreNumber, width - 480, 60);
   }
-  
 }
 
 function resetGame (){
-  //
+  //when the button is pressed and were dead then we play and the millisecond and other things are reset
   if (state1 === "dead" && state3 === "onPress") {
     state1 = "playing";
     milliSecond = 0;
-    
   }
   startTime = int(millis()/100);
   scrollSpeed1 = 18;
@@ -688,8 +638,8 @@ function resetGame (){
   dino.resetDino();
 }
 
-
 function changePressHowTo(){
+  //if its in start screen or dead then we can go to how to play screen
   if(state1 === "startScreen"){
     state1 = "howTo";
     stateChangeStart = "true";
@@ -698,14 +648,13 @@ function changePressHowTo(){
     state1 = "howTo";
     stateChangeStart = "false";
   }
-  
 }
 
 function changePressHowTo2(){
+  //if were in how to screen then we go back to dead screen/ startscreen
   if(state1 === "howTo" && stateChangeStart === "false"){
     state1 = "dead";
     state3 = "onPress";
-    
   }
   else if(state1 === "howTo" && stateChangeStart === "true"){
     state1 = "startScreen";
@@ -713,6 +662,7 @@ function changePressHowTo2(){
 }
 
 function changePressModes(){
+  //change mode button if were in light mode we turn dark and the game starts and the same opposite
   if(stateDark === "light"){
     stateDark = "dark";
     state3 = "onPress";
@@ -724,12 +674,14 @@ function changePressModes(){
 }
 
 function changePressGameOver(){
+  //if the button is pressed and were dead then store that
   if(state1 === "dead"){
     state3 = "onPress";
   }
 }
 
 function displayGameOver(){
+  //displays game over screen with buttons and different images depending on mode
   displayHighScore();
   resetButton.draw();
   howToPlayButton.draw();
@@ -740,10 +692,10 @@ function displayGameOver(){
   else if(stateDark === "dark"){
     image(darkGameOverImage, width/3.8, height/4, width/2, height/10);
   }
-  
 }
 
 function displayHowTo(){
+  //display how to screen with different images depending on light or dark and exit how to play button
   if(stateDark === "light"){
     background("white");
     image(grassBackground, 0, height - height/3.8, width, height - height/1.3);
@@ -763,45 +715,53 @@ function displayHowTo(){
 
 function moveBackground(){
   if(stateDark === "light"){
+    //3 images, an empty background one to fix bug
     image(grassBackgroundEmpty, 0, height - height/3.8, width, height - height/1.3);
+    //shows up first and moves
     image(grassBackground, x1Grass, height - height/3.8, width, height - height/1.3);
+    //shows up after and moves
     image(grassBackground, x2Grass, height - height/3.8, width, height - height/1.3);
   }
   else if(stateDark === "dark"){
+    //same as light mode but with dark mode
     image(darkModeGrassBackgroundEmpty, 0, height - height/2, width, height - height/2);
     image(darkModeGrassBackground, x1Grass, height - height/2, width, height - height/2);
     image(darkModeGrassBackground, x2Grass, height - height/2, width, height - height/2);
   }
+  //x value of images decreases with stored value
   x1Grass  -= scrollSpeed1 ;
   x2Grass -= scrollSpeed1;
   
-  
-
+  //if the x of the images is on the screen then make the next one show up at the end of the screen
   if (x1Grass < -width ){
     x1Grass = width;
   }
   if (x2Grass < -width ){
     x2Grass = width;
   }
-  
 }
 
 function moveBackgroundCloads(){
   if(stateDark === "light"){
+    //light mode cload background pictures
+    //white background fills extra space
     background("white");
     image(cloadsBackground, x1Cloads, 0, width, height/2);
     image(cloadsBackground, x2Cloads, 0, width, height/2);
   }
   else if(stateDark === "dark"){
+    //dark mode cload background pictures
+    //black background fills extra space
     background("black");
     image(darkCloadsBackground, x1Cloads, 0, width, height/2);
     image(darkCloadsBackground, x2Cloads, 0, width, height/2);
   }
   
-  
+  //x value of images decreases with stored value
   x1Cloads -= scrollSpeed2;
   x2Cloads -= scrollSpeed2;
-  
+
+  //if the x of the images is on the screen then make the next one show up at the end of the screen
   if (x1Cloads < -width){
     x1Cloads = width;
   }
@@ -811,9 +771,9 @@ function moveBackgroundCloads(){
 }
 
 function switchMidGameSetting(){
+  //at 200 and 400 the state change to dark and light
   if(milliSecond === 200){
     stateDark = "dark";
-    
   }
   else if(milliSecond === 400){
     stateDark = "light";
